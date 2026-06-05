@@ -135,6 +135,13 @@ export async function installUpdate(): Promise<void> {
   if (!handle) return;
   set({ status: "installing", error: null });
   try {
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      await invoke("stop_stremio_sidecar");
+      await new Promise((r) => setTimeout(r, 600));
+    } catch {
+      /* best-effort: the NSIS preinstall hook also kills the sidecar */
+    }
     await handle.install();
     const { relaunch } = await import("@tauri-apps/plugin-process");
     await relaunch();

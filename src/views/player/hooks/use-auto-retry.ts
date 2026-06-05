@@ -129,7 +129,7 @@ export function useAutoRetry(params: {
       debridFailoverTriedRef.current = true;
       const cached = Object.fromEntries((src.streamRef?.cachedSlugs ?? []).map((s) => [s, true]));
       const ac = new AbortController();
-      void resolveViaDebrids(failoverHash, src.streamRef?.fileIdx ?? undefined, cached, debrids, ac.signal).then(
+      void resolveViaDebrids(failoverHash, src.streamRef?.fileIdx ?? undefined, cached, debrids, ac.signal, false).then(
         async (r) => {
           const b = bridgeRef.current;
           if (r.ok && b) {

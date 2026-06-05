@@ -15,6 +15,7 @@ export async function resolveStream(
   stream: ParsedStream | ScoredStream,
   debrids: DebridStore[],
   signal: AbortSignal,
+  userCommitted = false,
 ): Promise<ResolveResult> {
   const expectedSize = stream.size ?? null;
   const tried: Array<{ slug: string; code: string }> = [];
@@ -30,7 +31,7 @@ export async function resolveStream(
       notWebReady: stream.behaviorHints?.notWebReady,
       subtitles: stream.subtitles?.map((s) => ({ url: s.url, lang: s.lang, id: s.id })),
     };
-    const ok = await validateLink(data, expectedSize, headers, signal);
+    const ok = await validateLink(data, expectedSize, headers, signal, false);
     if (ok) return { ok: true, data, via: "direct" };
     tried.push({ slug: "direct", code: "stub-or-error-video" });
     if (debrids.length === 0 || !stream.infoHash) {
@@ -58,6 +59,13 @@ export async function resolveStream(
     return { ok: false, code: "no-debrid-configured", tried };
   }
   const sorted = sortDebridsForStream(stream, debrids);
+  if (!userCommitted) {
+    const cachedMap = stream.cached ?? {};
+    const libMap = (stream as { inLibrary?: Record<string, boolean> }).inLibrary ?? {};
+    if (!sorted.some((d) => cachedMap[d.slug] === true || libMap[d.slug] === true)) {
+      return { ok: false, code: "uncached-not-committed", tried };
+    }
+  }
   const magnet = magnetFromHash(stream.infoHash);
   for (const d of sorted) {
     if (signal.aborted) {
@@ -82,6 +90,7 @@ async function validateLink(
   expectedSize: number | null,
   headers: Record<string, string> | undefined,
   signal: AbortSignal,
+  allowNetwork = true,
 ): Promise<boolean> {
   if (link.filesize != null && link.filesize > 0) {
     if (link.filesize < ERROR_VIDEO_MAX_BYTES) {
@@ -94,6 +103,7 @@ async function validateLink(
     }
     return true;
   }
+  if (!allowNetwork) return true;
   try {
     const ac = new AbortController();
     const onAbort = () => ac.abort();
@@ -138,10 +148,14 @@ export async function resolveViaDebrids(
   cached: Record<string, boolean>,
   debrids: DebridStore[],
   signal: AbortSignal,
+  userCommitted = false,
 ): Promise<ResolveResult> {
   if (!hash || debrids.length === 0) return { ok: false, code: "no-debrid-configured", tried: [] };
   const stream = { infoHash: hash, fileIdx, cached } as unknown as ScoredStream;
   const sorted = sortDebridsForStream(stream, debrids);
+  if (!userCommitted && !sorted.some((d) => cached[d.slug] === true)) {
+    return { ok: false, code: "uncached-not-committed", tried: [] };
+  }
   const magnet = magnetFromHash(hash);
   const tried: Array<{ slug: string; code: string }> = [];
   for (const d of sorted) {

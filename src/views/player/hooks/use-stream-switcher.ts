@@ -75,7 +75,7 @@ export function useStreamSwitcher(params: {
       swapAcRef.current?.abort();
       const ac = new AbortController();
       swapAcRef.current = ac;
-      const r = await resolveStream(stream, debrids, ac.signal);
+      const r = await resolveStream(stream, debrids, ac.signal, true);
       if (ac.signal.aborted) return;
       if (!r.ok) {
         console.warn(`[player] stream swap failed: ${r.code}`);

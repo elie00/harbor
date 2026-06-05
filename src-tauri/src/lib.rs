@@ -294,6 +294,7 @@ pub fn run() {
             harbor_try_suspend_webview,
             harbor_resume_webview,
             save_text_file,
+            cast_server::stop_stremio_sidecar,
             proc_mem::harbor_process_memory,
             trailer::fetch_trailer,
             stream_proxy::proxy_register,

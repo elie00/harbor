@@ -249,9 +249,7 @@ export function PlayPicker({
       if (!s) return;
       if (isStreamDead(s)) return;
       if (isWatchHub(s)) return;
-      const playableUncached =
-        !!s.infoHash && debrids.length > 0 && (s.seeders == null || s.seeders > 0);
-      if (!isCached(s) && !s.url && !playableUncached) return;
+      if (!isCached(s) && !s.url) return;
       const k = key(s);
       if (seen.has(k)) return;
       seen.add(k);
@@ -341,7 +339,7 @@ export function PlayPicker({
       return;
     }
     autoFiredRef.current = true;
-    onPlay(pick);
+    onPlay(pick, false);
   }, [autoActive, attempt, autoCandidates, resolving, autoAttemptIdx, autoSettleReady, pipelineDone, isCached, verifying, verifiedUrls, rejectedUrls, highConfidenceTick, hasStrongAddon, isTorrentioStream]);
 
   const previousMatch: ScoredStream | null = useMemo(() => {

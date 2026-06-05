@@ -72,8 +72,18 @@ export async function buildEpisodePlayerSrc(
     result.picker.primary,
     ...result.picker.all.filter((s) => s !== result.picker.primary),
   ].filter((s): s is NonNullable<typeof s> => !!s);
-  for (const candidate of ranked.slice(0, 6)) {
-    const r = await resolveStream(candidate, debrids, ac.signal);
+  const activeSlugs = debrids.map((d) => d.slug);
+  const playable = ranked.filter(
+    (s) =>
+      !!s.url ||
+      activeSlugs.some(
+        (slug) =>
+          s.cached?.[slug] === true ||
+          (s as { inLibrary?: Record<string, boolean> }).inLibrary?.[slug] === true,
+      ),
+  );
+  for (const candidate of playable.slice(0, 6)) {
+    const r = await resolveStream(candidate, debrids, ac.signal, false);
     if (!r.ok) continue;
     let playUrl = r.data.url;
     if (r.data.headers && Object.keys(r.data.headers).length > 0) {
@@ -85,7 +95,7 @@ export async function buildEpisodePlayerSrc(
       }
     }
     const preflight =
-      r.via === "stremio-server"
+      r.via === "stremio-server" || r.via === "direct"
         ? ({ ok: true } as const)
         : await preflightCheck(playUrl, ac.signal).catch(() => ({ ok: true } as const));
     if (!preflight.ok && preflight.reason === "stub") continue;

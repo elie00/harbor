@@ -71,13 +71,13 @@ export function usePickHandler({
     }
   };
 
-  const resolveAndOpen = async (stream: ScoredStream) => {
+  const resolveAndOpen = async (stream: ScoredStream, userCommitted: boolean) => {
     const ac = new AbortController();
     resolveAcRef.current?.abort();
     resolveAcRef.current = ac;
     let opened = false;
     try {
-      const r = await resolveStream(stream, debrids, ac.signal);
+      const r = await resolveStream(stream, debrids, ac.signal, userCommitted);
       if (ac.signal.aborted) return;
       if (!r.ok) {
         setFailedStreams((prev) => new Set(prev).add(stream));
@@ -112,7 +112,7 @@ export function usePickHandler({
         }
       }
       const preflight =
-        r.via === "stremio-server"
+        r.via === "stremio-server" || r.via === "direct"
           ? ({ ok: true } as const)
           : await preflightCheck(playUrl, ac.signal);
       if (ac.signal.aborted) return;
@@ -177,7 +177,7 @@ export function usePickHandler({
     }
   };
 
-  const onPlay = (stream: ScoredStream) => {
+  const onPlay = (stream: ScoredStream, committed = true) => {
     if (!stream.url && stream.externalUrl) {
       openUrl(stream.externalUrl);
       return;
@@ -189,7 +189,7 @@ export function usePickHandler({
     setResolveError(null);
     setQueuedHash(null);
     setResolving({ stream });
-    void resolveAndOpen(stream);
+    void resolveAndOpen(stream, committed);
   };
 
   const onCache = async (stream: ScoredStream) => {

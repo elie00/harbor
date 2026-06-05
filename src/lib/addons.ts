@@ -98,7 +98,18 @@ export async function setUserAddons(authKey: string, addons: Addon[]): Promise<b
   const result = await call<{ success?: boolean }>("addonCollectionSet", {
     authKey,
     type: "user",
-    addons: addons.map((a) => ({ manifest: a.manifest, transportUrl: a.transportUrl })),
+    addons: addons.map((a) => {
+      const raw = a as Record<string, unknown>;
+      return {
+        transportUrl: a.transportUrl,
+        transportName: typeof raw.transportName === "string" ? raw.transportName : "",
+        manifest: a.manifest,
+        flags: (raw.flags as { official?: boolean; protected?: boolean } | undefined) ?? {
+          official: false,
+          protected: false,
+        },
+      };
+    }),
   });
   return result != null;
 }

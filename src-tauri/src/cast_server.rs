@@ -235,6 +235,11 @@ pub fn ensure_started_on_setup(app: &AppHandle) {
     start(app);
 }
 
+#[tauri::command]
+pub fn stop_stremio_sidecar() {
+    kill_orphan_sidecars();
+}
+
 fn locate_ffmpeg_for_sidecar() -> Option<std::path::PathBuf> {
     #[cfg(windows)]
     {
