@@ -79,6 +79,11 @@ export function PlayPicker({
   const [strictMode, setStrictMode] = useState(settings.streamFilterLevel === "strict");
   const [forceShowAll, setForceShowAll] = useState(false);
   const filterDisabled = settings.streamFilterLevel === "off" || forceShowAll || isDownload;
+  const baseLangs = settings.preferredLanguages ?? [];
+  const [langFilter, setLangFilter] = useState(
+    settings.requirePreferredLanguage === true && baseLangs.length > 0,
+  );
+  const [cachedOnly, setCachedOnly] = useState(false);
   const {
     result,
     loading,
@@ -99,7 +104,6 @@ export function PlayPicker({
     strictMode,
     filterDisabled,
   });
-  const baseLangs = settings.preferredLanguages ?? [];
   const isAnimeRequest = useMemo(
     () => (streamIds ?? []).some((id) => id.startsWith("kitsu:") || id.startsWith("mal:")),
     [streamIds],
@@ -119,10 +123,6 @@ export function PlayPicker({
     }
     return out;
   }, [baseLangs, settings.preferredAudioLangs, isAnimeRequest]);
-  const [langFilter, setLangFilter] = useState(
-    settings.requirePreferredLanguage === true && baseLangs.length > 0,
-  );
-  const [cachedOnly, setCachedOnly] = useState(false);
 
   const { inviteKey, canInvite, inviteSentRef, hostSourceForMedia, expectHostSource } = useRoomInvite({
     meta,
@@ -476,16 +476,19 @@ export function PlayPicker({
       <BackdropLayer src={backdropSrc} />
 
       {createPortal(
-        <button
-          type="button"
-          onClick={() => backToDetail()}
-          aria-label="Back"
-          className="fixed left-5 top-5 z-[200] flex h-11 w-11 items-center justify-center rounded-full border border-edge bg-canvas/80 text-ink backdrop-blur-md transition-colors hover:bg-elevated"
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>,
+        <>
+          <button
+            type="button"
+            onClick={() => backToDetail()}
+            aria-label="Back"
+            className="fixed left-5 top-5 z-[200] flex h-11 w-11 items-center justify-center rounded-full border border-edge bg-canvas/80 text-ink backdrop-blur-md transition-colors hover:bg-elevated"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          
+        </>,
         document.body,
       )}
 

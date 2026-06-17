@@ -1,5 +1,40 @@
 # 🧪 دليل اختبار نظام الترجمة | Subtitle System Testing Guide
 
+## 📝 التحديثات الأخيرة | Recent Updates
+
+### ✅ إزالة الحد عن ترجمات إضافات Stremio | Unlimited Stremio Addon Subtitles
+**التاريخ | Date**: الجلسة الحالية | Current session  
+**الحالة | Status**: مكتمل | Completed
+
+تم إزالة الحد الأقصى لترجمات إضافات Stremio مع الحفاظ على الحد للمصادر الأخرى.
+
+**التغييرات | Changes**:
+- **إضافات Stremio | Stremio Addons**: لا يوجد حد (غير محدود | NO LIMIT - unlimited)
+- **OpenSubtitles**: حد 30 لكل لغة (محفوظ | 30 per language - maintained)
+- **Wyzie**: حد 30 لكل لغة (محفوظ | 30 per language - maintained)
+- **Jimaku**: حد 30 لكل لغة (محفوظ | 30 per language - maintained)
+
+**مثال | Example**:
+- قبل | Before: OpenSubtitles (30) + Addons (محدود بـ 30 | limited to 30) = 30 كحد أقصى
+- بعد | After: OpenSubtitles (30) + Addons (غير محدود | unlimited) = 30+ ترجمة
+
+**راجع | See**: `SUBTITLE_LIMIT_UPDATE.md` للتفاصيل الكاملة | for full details
+
+---
+
+### ✅ أزرار إعادة التحميل | Reload Buttons Added
+**التاريخ | Date**: الجلسة الحالية | Current session  
+**الحالة | Status**: مكتمل | Completed
+
+تم إضافة أزرار إعادة التحميل في ثلاثة أقسام:
+1. **قسم الترجمة | Subtitle Section**: زر لتحديث البحث عن الترجمات
+2. **اختيار المصادر | Stream Picker**: زر لتحديث جميع مصادر البث
+3. **الصفحة الرئيسية | Home Page**: زر لتحديث المكتبة والمحتوى
+
+**راجع | See**: `RELOAD_BUTTONS.md` لتفاصيل التطبيق | for implementation details
+
+---
+
 ## 🚀 كيفية تشغيل التطبيق مع السجلات
 
 ### 1. **تشغيل التطبيق في وضع التطوير:**

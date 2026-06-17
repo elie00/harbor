@@ -50,6 +50,7 @@ export type EpisodeDetail = {
   runtime: number | null;
   voteAverage: number | null;
   voteCount: number;
+  imdbId: string | null;
   guestStars: GuestStar[];
   crew: CrewMember[];
   stills: StillImage[];
@@ -110,5 +111,8 @@ export type TmdbEpisodeResponse = {
       width: number;
       vote_average: number;
     }>;
+  };
+  external_ids: {
+    imdb_id: string | null;
   };
 };

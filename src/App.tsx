@@ -78,6 +78,7 @@ const importAward = () => import("@/views/award");
 const importAnimeAward = () => import("@/views/anime-award");
 const importFilter = () => import("@/views/filter");
 const importGrid = () => import("@/views/grid");
+const importEpisodeDetail = () => import("@/views/episode-detail");
 const importPerson = () => import("@/views/person");
 const importCollection = () => import("@/views/collection");
 const importPlayPicker = () => import("@/views/play-picker");
@@ -102,6 +103,7 @@ const AwardView = lazy(() => importAward().then((m) => ({ default: m.AwardView }
 const AnimeAwardView = lazy(() => importAnimeAward().then((m) => ({ default: m.AnimeAwardView })));
 const FilterView = lazy(() => importFilter().then((m) => ({ default: m.FilterView })));
 const GridView = lazy(() => importGrid().then((m) => ({ default: m.GridView })));
+const EpisodeDetailView = lazy(() => importEpisodeDetail().then((m) => ({ default: m.EpisodeDetailView })));
 const PersonView = lazy(() => importPerson().then((m) => ({ default: m.PersonView })));
 const CollectionView = lazy(() => importCollection().then((m) => ({ default: m.CollectionView })));
 const CollectionsView = lazy(() => import("@/views/collections").then((m) => ({ default: m.CollectionsView })));
@@ -372,7 +374,7 @@ function parseDeepLinkEpisode(videoId?: string): { season: number; episode: numb
 }
 
 function Shell() {
-  const { topKind, service, meta, metaLiveContext, metaEpisodeHint, personId, collectionId, filter, grid, awardType, animeAwardSource, picker, player, setView, goBack, openMeta, stackKinds } = useView();
+  const { topKind, service, meta, metaLiveContext, metaEpisodeHint, episodeDetail, personId, collectionId, filter, grid, awardType, animeAwardSource, picker, player, setView, goBack, openMeta, stackKinds } = useView();
   const { settings } = useSettings();
   const preview = useThemePreview();
   const layout = useMemo(
@@ -466,6 +468,7 @@ function Shell() {
     stackKinds.includes("collections"),
   );
   const detailTop = topKind === "meta";
+  const episodeDetailTop = topKind === "episode-detail";
   const filterTop = topKind === "filter";
   const gridTop = topKind === "grid";
   const awardTop = topKind === "award";
@@ -518,6 +521,11 @@ function Shell() {
   const queueAlive = useKeepAlive(queueTop, queueTop);
   const serviceAlive = useKeepAlive(serviceTop, serviceTop && !!service);
   const detailAlive = useKeepAlive(detailTop, !!meta);
+  const episodeDetailAlive = useKeepAlive(
+    episodeDetailTop,
+    !!episodeDetail,
+    stackKinds.includes("episode-detail"),
+  );
   const personAlive = useKeepAlive(personTop, personId !== null);
   const collectionAlive = useKeepAlive(
     collectionTop,
@@ -650,6 +658,19 @@ function Shell() {
           <div className={layer(detailTop)}>
             <Suspense fallback={null}>
               <DetailView key={`meta-${meta.id}`} meta={meta} liveContext={metaLiveContext} episodeHint={metaEpisodeHint ?? undefined} />
+            </Suspense>
+          </div>
+        )}
+        {episodeDetailAlive && episodeDetail && (
+          <div className={layer(episodeDetailTop)}>
+            <Suspense fallback={null}>
+              <EpisodeDetailView
+                key={`episode-${episodeDetail.seriesId}-${episodeDetail.season}-${episodeDetail.episode}`}
+                seriesId={episodeDetail.seriesId}
+                season={episodeDetail.season}
+                episode={episodeDetail.episode}
+                seriesMeta={episodeDetail.seriesMeta}
+              />
             </Suspense>
           </div>
         )}

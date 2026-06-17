@@ -125,6 +125,7 @@ export async function fetchEpisodeData(
         runtime: cinemetaData.runtime!,
         voteAverage: cinemetaData.voteAverage!,
         voteCount: cinemetaData.voteCount!,
+        imdbId: null,
         guestStars: cinemetaData.guestStars || [],
         crew: cinemetaData.crew || [],
         stills: cinemetaData.stills || [],

@@ -51,6 +51,7 @@ const testEpisodeDetail: EpisodeDetail = {
   runtime: 45,
   voteAverage: 8.5,
   voteCount: 100,
+  imdbId: "tt1234567",
   guestStars: [testGuestStar],
   crew: [testCrewMember],
   stills: [testStillImage],
@@ -98,6 +99,9 @@ const testApiResponse: TmdbEpisodeResponse = {
         vote_average: 7.5,
       },
     ],
+  },
+  external_ids: {
+    imdb_id: "tt1234567",
   },
 };
 

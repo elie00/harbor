@@ -78,6 +78,7 @@ export type Frame =
   | { kind: "downloads" }
   | { kind: "service"; service: StreamingService }
   | { kind: "meta"; meta: Meta; liveContext?: boolean; episodeHint?: { season: number; episode: number } }
+  | { kind: "episode-detail"; seriesId: string; season: number; episode: number; seriesMeta?: Meta }
   | { kind: "person"; id: number }
   | { kind: "collection"; id: number }
   | { kind: "collections" }
@@ -119,6 +120,8 @@ type ViewValue = {
   metaEpisodeHint: { season: number; episode: number } | null;
   openMeta: (m: Meta | null, opts?: { liveContext?: boolean; episodeHint?: { season: number; episode: number } }) => void;
   promoteMetaToRoot: () => void;
+  episodeDetail: { seriesId: string; season: number; episode: number; seriesMeta?: Meta } | null;
+  openEpisodeDetail: (seriesId: string, season: number, episode: number, seriesMeta?: Meta) => void;
   personId: number | null;
   openPerson: (id: number | null) => void;
   collectionId: number | null;
@@ -207,6 +210,8 @@ function frameKey(f: Frame): string {
       return `service:${f.service}`;
     case "meta":
       return `meta:${f.meta.id}`;
+    case "episode-detail":
+      return `episode-detail:${f.seriesId}:${f.season}:${f.episode}`;
     case "person":
       return `person:${f.id}`;
     case "collection":
@@ -305,6 +310,19 @@ export function ViewProvider({ children }: { children: ReactNode }) {
     metaFrame && metaFrame.kind === "meta" ? metaFrame.liveContext === true : false;
   const metaEpisodeHint =
     metaFrame && metaFrame.kind === "meta" ? metaFrame.episodeHint ?? null : null;
+  const episodeDetail = useMemo(
+    () =>
+      top.kind === "episode-detail"
+        ? { seriesId: top.seriesId, season: top.season, episode: top.episode, seriesMeta: top.seriesMeta }
+        : null,
+    [
+      top.kind,
+      top.kind === "episode-detail" ? top.seriesId : "",
+      top.kind === "episode-detail" ? top.season : 0,
+      top.kind === "episode-detail" ? top.episode : 0,
+      top.kind === "episode-detail" && top.seriesMeta ? top.seriesMeta.id : "",
+    ],
+  );
   const personId = top.kind === "person" ? top.id : null;
   const collectionId = top.kind === "collection" ? top.id : null;
   const filter = top.kind === "filter" ? top.filter : null;
@@ -495,6 +513,30 @@ export function ViewProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const openEpisodeDetail = useCallback(
+    (seriesId: string, season: number, episode: number, seriesMeta?: Meta) => {
+      setStack((cur) => {
+        const t = cur[cur.length - 1];
+        if (
+          t.kind === "episode-detail" &&
+          t.seriesId === seriesId &&
+          t.season === season &&
+          t.episode === episode
+        ) {
+          return cur;
+        }
+        return pushFrame(cur, {
+          kind: "episode-detail",
+          seriesId,
+          season,
+          episode,
+          seriesMeta,
+        });
+      });
+    },
+    [],
+  );
+
   const openPerson = useCallback((id: number | null) => {
     if (id === null) {
       setStack((s) => (s.length > 1 ? s.slice(0, -1) : s));
@@ -658,6 +700,8 @@ export function ViewProvider({ children }: { children: ReactNode }) {
       metaEpisodeHint,
       openMeta,
       promoteMetaToRoot,
+      episodeDetail,
+      openEpisodeDetail,
       personId,
       openPerson,
       collectionId,
@@ -705,6 +749,8 @@ export function ViewProvider({ children }: { children: ReactNode }) {
       metaLiveContext,
       metaEpisodeHint,
       promoteMetaToRoot,
+      episodeDetail,
+      openEpisodeDetail,
       personId,
       collectionId,
       openCollection,

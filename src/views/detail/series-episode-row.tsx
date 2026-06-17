@@ -1,4 +1,4 @@
-import { CalendarClock, Check, Play } from "lucide-react";
+import { CalendarClock, Check, Eye, Play } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Poster } from "@/components/poster";
 import type { Meta } from "@/lib/cinemeta";
@@ -29,7 +29,7 @@ export function EpisodeRow({
   onContextMenu?: (e: React.MouseEvent, season: number, episode: number, watched: boolean) => void;
 }) {
   const t = useT();
-  const { openPicker } = useView();
+  const { openPicker, openEpisodeDetail } = useView();
   const { settings } = useSettings();
   const tmdbStill = ep.stillPath ? `https://image.tmdb.org/t/p/w300${ep.stillPath}` : undefined;
   const candidates = useMemo(() => {
@@ -57,6 +57,19 @@ export function EpisodeRow({
   };
 
   const isUpcoming = isUpcomingEpisode(ep);
+  
+  // Click handlers
+  const handleEpisodeClick = () => {
+    if (!isUpcoming) {
+      openEpisodeDetail(meta.id, ep.seasonNumber, ep.episodeNumber, meta);
+    }
+  };
+
+  const handlePlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    openPicker(meta, playEpisode, { autoPlay: settings.instantPlay });
+  };
+
   return (
     <div
       data-ep={ep.episodeNumber}
@@ -64,8 +77,10 @@ export function EpisodeRow({
       onContextMenu={(e) => onContextMenu?.(e, ep.seasonNumber, ep.episodeNumber, progress.watched)}
       className={`group flex gap-6 rounded-2xl px-4 py-5 transition-colors ${isUpcoming ? "opacity-75 hover:bg-elevated/30" : "hover:bg-elevated/30"}`}
     >
+      {/* Episode clickable area - navigates to episode detail page */}
       <button
-        onClick={() => openPicker(meta, playEpisode, { autoPlay: settings.instantPlay })}
+        onClick={handleEpisodeClick}
+        disabled={isUpcoming}
         className="flex min-w-0 flex-1 gap-6 text-start"
       >
         <div className="relative w-[200px] shrink-0 overflow-hidden rounded-lg">
@@ -85,8 +100,8 @@ export function EpisodeRow({
           )}
           {!isUpcoming && (
             <div className="absolute inset-0 flex items-center justify-center bg-canvas/40 opacity-0 transition-opacity group-hover:opacity-100">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-ink text-canvas">
-                <Play size={18} fill="currentColor" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-ink/10 text-ink backdrop-blur-sm">
+                <Eye size={20} />
               </div>
             </div>
           )}
@@ -145,6 +160,17 @@ export function EpisodeRow({
           )}
         </div>
       </button>
+      
+      {/* Separate play button - navigates directly to play picker */}
+      {!isUpcoming && (
+        <button
+          onClick={handlePlayClick}
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-edge bg-elevated/60 transition-colors hover:bg-elevated"
+        >
+          <Play size={18} fill="currentColor" />
+        </button>
+      )}
+      
       <EpisodeDownloadButton meta={meta} episode={playEpisode} />
     </div>
   );

@@ -79,6 +79,29 @@ const en: Record<string, string> = {
   "sports.customize.deselectGroupAll": "Deselect All",
   "sports.customize.cancel": "Cancel",
   "sports.customize.save": "Save Changes",
+
+  // Episode Detail Page
+  "Episode Not Found": "Episode Not Found",
+  "Episode information is not available": "Episode information is not available.",
+  "Unable to connect": "Unable to connect",
+  "Stills": "Stills",
+  "Guest Stars": "Guest Stars",
+  "Guest Stars · {n}": "Guest Stars · {n}",
+  "Overview": "Overview",
+  "Go Back": "Go Back",
+  "Retry": "Retry",
+  "Loading episode details...": "Loading episode details...",
+  "View Series": "View Series",
+  "Play Episode": "Play Episode",
+  "min": "min",
+  "Episode {n}": "Episode {n}",
+  "{n} min": "{n} min",
+  "Unable to load series information": "Unable to load series information",
+  "An unexpected error occurred": "An unexpected error occurred",
+  "TMDB Rating": "TMDB Rating",
+  "Votes": "Votes",
+  "Air Date": "Air Date",
+  "Runtime": "Runtime",
 };
 
 export default en;

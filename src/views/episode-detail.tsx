@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, Play, Star } from "lucide-react";
+import { ArrowLeft, Play, Star, Popcorn } from "lucide-react";
 import type { Meta } from "@/lib/cinemeta";
 import type { EpisodeDetail } from "@/lib/providers/tmdb/tmdb-episode-types";
 import type { CastEntry } from "@/lib/providers/tmdb";
@@ -51,6 +51,13 @@ export function EpisodeDetailView({
     settings.mdblistKey,
     imdbId,
   );
+  const episodeImdbId = episodeData?.imdbId ?? undefined;
+  const episodeOmdbScores = useOmdbScores(episodeImdbId);
+  const episodeMdblistScores = useMdblistScores(
+    settings.mdblistKey,
+    episodeImdbId ?? null,
+    "show",
+  );
   useScrollMemory(`episode:${seriesId}:${season}:${episode}`, scrollRef);
 
   const episodeKey = `${seriesId}:${season}:${episode}`;
@@ -101,8 +108,12 @@ export function EpisodeDetailView({
   };
 
   const background = getImageUrl(episodeData?.stillPath, "original") ?? seriesMeta?.background ?? undefined;
-  const episodeRating = episodeData?.voteAverage && episodeData.voteAverage > 0
-    ? episodeData.voteAverage.toFixed(1) : undefined;
+
+  // Episode rating: OMDB (via episode IMDb ID) → TMDB vote_average → none
+  const episodeRating = episodeOmdbScores?.imdbRating ??
+    (episodeData?.voteAverage && episodeData.voteAverage > 0
+      ? episodeData.voteAverage.toFixed(1) : undefined);
+
   const seriesRating = omdbScores?.imdbRating ?? (imdbId ? seriesMeta?.imdbRating : undefined) ?? undefined;
 
   const handlePlay = useCallback(() => {
@@ -216,6 +227,19 @@ export function EpisodeDetailView({
                   <Pill>
                     <Star size={13} className="text-accent" fill="currentColor" />
                     <span className="text-accent">{episodeRating}</span>
+                    {episodeOmdbScores?.imdbVotes != null && (
+                      <span className="text-[11px] text-ink-muted">
+                        {episodeOmdbScores.imdbVotes >= 1000
+                          ? `${(episodeOmdbScores.imdbVotes / 1000).toFixed(0)}k`
+                          : episodeOmdbScores.imdbVotes}
+                      </span>
+                    )}
+                  </Pill>
+                )}
+                {!episodeOmdbScores && episodeMdblistScores?.score != null && (
+                  <Pill>
+                    <Popcorn size={13} className="text-ink-muted" />
+                    <span>{Math.round(episodeMdblistScores.score)}</span>
                   </Pill>
                 )}
                 <HeroRatings

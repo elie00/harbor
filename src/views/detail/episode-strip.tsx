@@ -59,7 +59,7 @@ function EpisodeStripCard({
   onContextMenu?: (e: React.MouseEvent, season: number, episode: number, watched: boolean) => void;
 }) {
   const t = useT();
-  const { openPicker } = useView();
+  const { openPicker, openEpisodeDetail } = useView();
   const { settings } = useSettings();
   const tmdbStill = ep.stillPath ? `https://image.tmdb.org/t/p/w300${ep.stillPath}` : undefined;
   const candidates = useMemo(
@@ -71,64 +71,83 @@ function EpisodeStripCard({
     setImgIdx(0);
   }, [ep.id]);
   const still = candidates[imgIdx];
+  
+  // Click handlers
+  const handleCardClick = () => {
+    openEpisodeDetail(meta.id, ep.seasonNumber, ep.episodeNumber, meta);
+  };
+
+  const handlePlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    openPicker(
+      meta,
+      {
+        season: ep.seasonNumber,
+        episode: ep.episodeNumber,
+        name: ep.name || undefined,
+        still,
+        overview: ep.overview || undefined,
+      },
+      { autoPlay: settings.instantPlay },
+    );
+  };
+
   return (
-    <button
+    <div
       data-ep={ep.episodeNumber}
       data-no-card-ring
       onContextMenu={(e) => onContextMenu?.(e, ep.seasonNumber, ep.episodeNumber, progress.watched)}
-      onClick={() =>
-        openPicker(
-          meta,
-          {
-            season: ep.seasonNumber,
-            episode: ep.episodeNumber,
-            name: ep.name || undefined,
-            still,
-            overview: ep.overview || undefined,
-          },
-          { autoPlay: settings.instantPlay },
-        )
-      }
-      className="group flex w-[244px] shrink-0 flex-col gap-2.5 text-start"
+      className="group relative w-[244px] shrink-0"
     >
-      <div className="relative aspect-video overflow-hidden rounded-xl">
-        <div className={spoiler?.thumb ? SPOILER_THUMB_CLASS : undefined}>
-          <Poster
-            src={still}
-            seed={String(ep.id)}
-            ratio="landscape"
-            className=""
-            onError={() => setImgIdx((i) => i + 1)}
-          />
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center bg-canvas/40 opacity-0 transition-opacity group-hover:opacity-100">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-canvas">
-            <Play size={16} fill="currentColor" />
+      {/* Main card - click to navigate to episode detail page */}
+      <button
+        onClick={handleCardClick}
+        className="flex w-full flex-col gap-2.5 text-start"
+      >
+        <div className="relative aspect-video overflow-hidden rounded-xl">
+          <div className={spoiler?.thumb ? SPOILER_THUMB_CLASS : undefined}>
+            <Poster
+              src={still}
+              seed={String(ep.id)}
+              ratio="landscape"
+              className=""
+              onError={() => setImgIdx((i) => i + 1)}
+            />
           </div>
-        </div>
-        <span className="absolute start-2 top-2 rounded-md bg-canvas/95 px-1.5 py-0.5 text-[11px] font-semibold text-ink">
-          {ep.episodeNumber}
-        </span>
-        {progress.watched && (
-          <span className="absolute end-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-400/22 text-emerald-200 ring-1 ring-emerald-400/40 backdrop-blur-sm">
-            <Check size={12} strokeWidth={3} />
+          <span className="absolute start-2 top-2 rounded-md bg-canvas/95 px-1.5 py-0.5 text-[11px] font-semibold text-ink">
+            {ep.episodeNumber}
           </span>
-        )}
-        {progress.ratio > 0.01 && (
-          <div className="absolute inset-x-0 bottom-0 h-[3px] bg-black/55">
-            <div className="h-full bg-accent" style={{ width: `${Math.max(2, progress.ratio * 100)}%` }} />
-          </div>
-        )}
-      </div>
-      <div className="flex flex-col gap-0.5 px-0.5">
-        <span className={`truncate text-[13.5px] font-semibold text-ink ${spoiler?.title ? SPOILER_TEXT_CLASS : ""}`}>
-          {ep.name || t("Episode {n}", { n: ep.episodeNumber })}
-        </span>
-        <span className="text-[11.5px] text-ink-subtle">
-          S{ep.seasonNumber} E{ep.episodeNumber}
-          {ep.runtime ? ` · ${t("{n} min", { n: ep.runtime })}` : ""}
-        </span>
-      </div>
-    </button>
+          {progress.watched && (
+            <span className="absolute end-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-400/22 text-emerald-200 ring-1 ring-emerald-400/40 backdrop-blur-sm">
+              <Check size={12} strokeWidth={3} />
+            </span>
+          )}
+          {progress.ratio > 0.01 && (
+            <div className="absolute inset-x-0 bottom-0 h-[3px] bg-black/55">
+              <div className="h-full bg-accent" style={{ width: `${Math.max(2, progress.ratio * 100)}%` }} />
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col gap-0.5 px-0.5">
+          <span className={`truncate text-[13.5px] font-semibold text-ink ${spoiler?.title ? SPOILER_TEXT_CLASS : ""}`}>
+            {ep.name || t("Episode {n}", { n: ep.episodeNumber })}
+          </span>
+          <span className="text-[11.5px] text-ink-subtle">
+            S{ep.seasonNumber} E{ep.episodeNumber}
+            {ep.runtime ? ` · ${t("{n} min", { n: ep.runtime })}` : ""}
+          </span>
+        </div>
+      </button>
+      
+      {/* Play button overlay - appears on hover and navigates directly to play picker */}
+      <button
+        onClick={handlePlayClick}
+        className="absolute inset-0 flex items-center justify-center bg-canvas/40 opacity-0 transition-opacity group-hover:opacity-100"
+      >
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-canvas">
+          <Play size={16} fill="currentColor" />
+        </div>
+      </button>
+    </div>
   );
 }

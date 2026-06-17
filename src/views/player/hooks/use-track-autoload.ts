@@ -133,16 +133,23 @@ export function useTrackAutoload(params: {
       }
       const matches = results.filter((r) => langScore(r.lang ?? "", langs) >= 0);
       console.info(`[subs/autoload] ${matches.length} match preferred langs`);
-      const perLang = new Map<string, number>();
-      const PER_LANG_MAX = 30; // Increased from 6 to allow more subtitles per language
+      const perLangNonAddon = new Map<string, number>();
+      const PER_LANG_MAX_NON_ADDON = 30; // Limit for OpenSubtitles, Wyzie, etc.
+      // No limit for Stremio addon subtitles
       let firstAdded = false;
       let attempted = 0;
       let added = 0;
       for (const r of matches) {
         const k = (r.lang ?? "und").toLowerCase();
-        const n = perLang.get(k) ?? 0;
-        if (n >= PER_LANG_MAX) continue;
-        perLang.set(k, n + 1);
+        const isAddon = r.source === "addon";
+        
+        // Apply limit only to non-addon sources (OpenSubtitles, Wyzie, etc.)
+        if (!isAddon) {
+          const n = perLangNonAddon.get(k) ?? 0;
+          if (n >= PER_LANG_MAX_NON_ADDON) continue;
+          perLangNonAddon.set(k, n + 1);
+        }
+        // Addon subtitles have no limit - they always proceed
         const blocked = snapRef.current.subtitleTracks.some((t) => t.selected);
         const embeddedPreferred =
           settings.preferEmbeddedSubs &&
@@ -168,7 +175,7 @@ export function useTrackAutoload(params: {
         }
       }
       console.info(
-        `[subs/autoload] ${added}/${attempted} subs accepted by player (${matches.length - attempted} skipped by per-lang cap)`,
+        `[subs/autoload] ${added}/${attempted} subs accepted by player (${matches.length - attempted} skipped by non-addon per-lang cap)`,
       );
     })();
   }, [

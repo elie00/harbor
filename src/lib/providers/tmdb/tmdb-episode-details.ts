@@ -25,8 +25,8 @@ export async function tmdbEpisodeDetail(
   try {
     const path = `tv/${tvId}/season/${seasonNumber}/episode/${episodeNumber}`;
     const params = {
-      append_to_response: "credits,images",
-      include_image_language: "en,null", // Request English and language-neutral images
+      append_to_response: "credits,images,external_ids",
+      include_image_language: "en,null",
     };
 
     const data = await get<TmdbEpisodeResponse>(apiKey, path, params);
@@ -84,6 +84,7 @@ export async function tmdbEpisodeDetail(
       runtime: data.runtime,
       voteAverage: data.vote_average,
       voteCount: data.vote_count,
+      imdbId: data.external_ids?.imdb_id ?? null,
       guestStars,
       crew,
       stills,

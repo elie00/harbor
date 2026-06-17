@@ -67,6 +67,23 @@ const detail: Record<string, string> = {
   "No episodes found for this season.": "لم يُعثر على حلقات لهذا الموسم.",
   "No sources found for this episode.": "لم يُعثر على مصادر لهذه الحلقة.",
 
+  // Episode Detail Page
+  "Episode Not Found": "الحلقة غير موجودة",
+  "Episode information is not available": "معلومات الحلقة غير متوفرة",
+  "Unable to connect": "غير قادر على الاتصال",
+  "Stills": "لقطات من الحلقة",
+  "Guest Stars": "ضيوف الحلقة",
+  "Guest Stars · {n}": "ضيوف الحلقة · {n}",
+  "Overview": "نظرة عامة",
+  "Go Back": "العودة",
+  "Retry": "إعادة المحاولة",
+  "Loading episode details...": "جاري تحميل تفاصيل الحلقة...",
+  "View Series": "عرض المسلسل",
+  "Play Episode": "تشغيل الحلقة",
+  "min": "دقيقة",
+  "Unable to load series information": "غير قادر على تحميل معلومات المسلسل",
+  "An unexpected error occurred": "حدث خطأ غير متوقع",
+
   Backdrops: "الخلفيات",
   Logos: "الشعارات",
   Posters: "الملصقات",
