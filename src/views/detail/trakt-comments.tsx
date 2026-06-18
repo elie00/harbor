@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Heart, MessageCircle, ChevronDown, ExternalLink } from "lucide-react";
+import { Heart, MessageCircle, ChevronDown, Settings } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { fetchComments, type TraktComment } from "@/lib/trakt/comments";
 import type { IdResolution } from "@/lib/trakt/ids";
-import { openUrl } from "@/lib/window";
 import { useSettings } from "@/lib/settings";
+import { useView } from "@/lib/view";
+import { openUrl } from "@/lib/window";
 
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -82,7 +83,8 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
   const [showSort, setShowSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
   const { settings } = useSettings();
-  const connected = !!settings.traktAccessToken;
+  const { openSettings } = useView();
+  const connected = !!(settings.traktAccessToken || settings.traktRefreshToken);
 
   const target = resolution?.ok ? resolution.target : null;
 
@@ -180,11 +182,11 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
           </p>
           <p className="mt-3">
             <button
-              onClick={() => openUrl("harbor://settings/account")}
+              onClick={() => openSettings("trakt")}
               className="inline-flex items-center gap-1.5 rounded-lg bg-ink px-4 py-2 text-[13px] font-semibold text-canvas transition-transform hover:scale-[1.02]"
             >
+              <Settings size={14} strokeWidth={2.2} />
               {t("Connect Trakt")}
-              <ExternalLink size={13} strokeWidth={2.2} />
             </button>
           </p>
         </div>
