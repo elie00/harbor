@@ -6,6 +6,8 @@ import {
   likeComment,
   unlikeComment,
   postComment,
+  rateContent,
+  removeRating,
   type TraktComment,
 } from "@/lib/trakt/comments";
 import { traktRequest, TraktApiError } from "@/lib/trakt/client";
@@ -165,6 +167,9 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
   const [posting, setPosting] = useState(false);
   const [postError, setPostError] = useState<string | null>(null);
   const [text, setText] = useState("");
+  const [userRating, setUserRating] = useState(0);
+  const [ratinging, setRatinging] = useState(false);
+  const [hoverRating, setHoverRating] = useState(0);
   const sortRef = useRef<HTMLDivElement>(null);
   const { openSettings } = useView();
   const [session, setSessionState] = useState(() => getSession());
@@ -263,6 +268,21 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
     setPosting(false);
   }, [target, text, posting]);
 
+  const handleRate = useCallback(async (rating: number) => {
+    if (!target || ratinging) return;
+    setRatinging(true);
+    try {
+      if (rating === userRating) {
+        await removeRating(target);
+        setUserRating(0);
+      } else {
+        await rateContent(target, rating);
+        setUserRating(rating);
+      }
+    } catch {}
+    setRatinging(false);
+  }, [target, ratinging, userRating]);
+
   return (
     <section>
       <div className="mb-5 flex items-center justify-between">
@@ -302,6 +322,45 @@ export function TraktComments({ resolution }: { resolution: IdResolution | null 
           </div>
         )}
       </div>
+
+      {target && connected && (
+        <div className="mb-4 flex items-center gap-2">
+          <span className="text-[12px] font-medium text-ink-muted">{t("Your Rating")}:</span>
+          <div className="flex items-center gap-0.5">
+            {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => {
+              const active = hoverRating ? n <= hoverRating : n <= userRating;
+              return (
+                <button
+                  key={n}
+                  onClick={() => handleRate(n)}
+                  onMouseEnter={() => setHoverRating(n)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  disabled={ratinging}
+                  className={`h-5 w-5 text-[14px] transition-colors ${
+                    ratinging ? "cursor-wait opacity-50" : "cursor-pointer"
+                  } ${
+                    active ? "text-yellow-400" : "text-ink-muted/30"
+                  }`}
+                >
+                  ★
+                </button>
+              );
+            })}
+          </div>
+          {userRating > 0 && (
+            <>
+              <span className="text-[12px] font-medium text-ink-muted">{userRating}/10</span>
+              <button
+                onClick={() => handleRate(userRating)}
+                disabled={ratinging}
+                className="text-[11px] text-ink-muted/50 underline transition-colors hover:text-ink-muted"
+              >
+                {t("Remove")}
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       {resolution && !resolution.ok && (
         <p className="rounded-xl bg-elevated p-4 text-[13px] text-ink-muted ring-1 ring-edge">

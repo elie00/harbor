@@ -127,3 +127,22 @@ export async function postComment(
   });
   return mapComment(raw);
 }
+
+export function ratingPath(target: TraktTarget): string {
+  const id = showPath(target);
+  if (target.kind === "episode") {
+    return `/shows/${id}/seasons/${target.season}/episodes/${target.number}/rating`;
+  }
+  if (target.kind === "movie") return `/movies/${id}/rating`;
+  return `/shows/${id}/rating`;
+}
+
+export async function rateContent(target: TraktTarget, rating: number): Promise<void> {
+  const path = ratingPath(target);
+  await traktRequest(path, { method: "POST", authed: true, body: { rating } });
+}
+
+export async function removeRating(target: TraktTarget): Promise<void> {
+  const path = ratingPath(target);
+  await traktRequest(path, { method: "DELETE", authed: true });
+}
