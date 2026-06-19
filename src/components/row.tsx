@@ -413,7 +413,10 @@ export function Row({
       {(title || onViewAll) && (
         <div className="flex items-baseline justify-between gap-4 pe-1">
           {title && (
-            <h3 className="truncate text-[17px] font-medium tracking-tight text-ink">
+            <h3
+              className="truncate font-medium tracking-tight text-ink"
+              style={{ fontSize: `${Math.round(17 * settings.rowTitleScale)}px` }}
+            >
               {title}
             </h3>
           )}

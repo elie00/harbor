@@ -97,6 +97,26 @@ export function setManualWatchedUpTo(
   persist(on, off);
 }
 
+export function setManualWatchedMany(
+  metaId: string,
+  episodes: Array<{ season: number; episode: number }>,
+  watched: boolean,
+): void {
+  const on = new Set(watchedSet());
+  const off = new Set(unwatchedSet());
+  for (const { season, episode } of episodes) {
+    const k = key(metaId, season, episode);
+    if (watched) {
+      on.add(k);
+      off.delete(k);
+    } else {
+      on.delete(k);
+      off.add(k);
+    }
+  }
+  persist(on, off);
+}
+
 export function subscribeManualWatched(fn: () => void): () => void {
   subs.add(fn);
   return () => {

@@ -45,7 +45,14 @@ export function usePlayerBridge(params: {
 
   const hdrOpaqueWindow = isWindowsDesktop() && settings.playerHdrOpaqueWindow;
   const embedActive = settings.playerMpvEmbed && !hdrOpaqueWindow;
-  const bridgeKey = `${autoFallbackTried ? "mpv" : settings.playerEngine}|${settings.playerAnime4k}|${settings.playerHdrToSdr}|${embedActive}|${settings.playerAnime4kShaders.join(",")}`;
+  const isAnimeSrc =
+    !!src.meta.id?.startsWith("kitsu:") ||
+    !!src.meta.id?.startsWith("mal:") ||
+    !!src.meta.id?.startsWith("anilist:") ||
+    !!src.meta.id?.startsWith("anidb:") ||
+    (src.meta.genres ?? []).some((g) => g.toLowerCase() === "anime");
+  const anime4kOn = settings.playerAnime4k && (!settings.playerAnime4kAnimeOnly || isAnimeSrc);
+  const bridgeKey = `${autoFallbackTried ? "mpv" : settings.playerEngine}|${anime4kOn}|${settings.playerHdrToSdr}|${embedActive}|${anime4kOn ? settings.playerAnime4kShaders.join(",") : ""}`;
   const [bridgeReady, setBridgeReady] = useState(false);
   useEffect(() => {
     const host = videoMountRef.current;
@@ -70,11 +77,11 @@ export function usePlayerBridge(params: {
         };
       };
       const { bridge: choose, engine: chosen } = await pickBridge(want, src.notWebReady === true, {
-        anime4k: settings.playerAnime4k,
+        anime4k: anime4kOn,
         hdrToSdr: settings.playerHdrToSdr,
         embed: embedActive,
         d3d11Flip: settings.playerD3d11Flip,
-        anime4kShaders: settings.playerAnime4k && settings.playerAnime4kShaders.length > 0
+        anime4kShaders: anime4kOn && settings.playerAnime4kShaders.length > 0
           ? settings.playerAnime4kShaders
           : [],
         getEmbedRect,

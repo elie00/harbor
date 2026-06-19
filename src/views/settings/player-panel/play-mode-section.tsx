@@ -1,7 +1,9 @@
 import { useSettings } from "@/lib/settings";
+import { useT } from "@/lib/i18n";
 
 export function PlayModePanel() {
   const { settings, update } = useSettings();
+  const t = useT();
 
   const choices: Array<{
     id: "instant" | "manual";
@@ -11,14 +13,14 @@ export function PlayModePanel() {
   }> = [
     {
       id: "instant",
-      label: "Instant",
-      sub: "Hitting Play jumps straight into playback with the best stream Harbor finds.",
+      label: t("Instant"),
+      sub: t("Hitting Play jumps straight into playback with the best stream Harbor finds."),
       recommended: true,
     },
     {
       id: "manual",
-      label: "Manual picker",
-      sub: "Hitting Play opens the source list so you can choose quality, debrid, and audio yourself.",
+      label: t("Manual picker"),
+      sub: t("Hitting Play opens the source list so you can choose quality, debrid, and audio yourself."),
     },
   ];
 
@@ -49,7 +51,7 @@ export function PlayModePanel() {
                 <span className="text-[15px] font-semibold text-ink">{c.label}</span>
                 {c.recommended && (
                   <span className="rounded-md bg-accent/15 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wider text-accent">
-                    Recommended
+                    {t("Recommended")}
                   </span>
                 )}
               </div>
@@ -71,10 +73,9 @@ export function PlayModePanel() {
           <span className="h-5 w-5 rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.4)]" />
         </span>
         <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <span className="text-[15px] font-semibold text-ink">Remember last stream</span>
+          <span className="text-[15px] font-semibold text-ink">{t("Remember last stream")}</span>
           <span className="text-[12.5px] leading-snug text-ink-muted">
-            When you resume something you were watching, replay the exact stream you last used (same
-            addon and source) instead of opening the picker again. Turn off to always choose fresh.
+            {t("When you resume something you were watching, replay the exact stream you last used (same addon and source) instead of opening the picker again. Turn off to always choose fresh.")}
           </span>
         </div>
       </button>

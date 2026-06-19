@@ -26,6 +26,7 @@ export function Inspector({
   onChromeChange,
   onRegenerateChrome,
   onExpand,
+  onEditCardCss,
 }: {
   draft: Draft;
   onPatch: (patch: Partial<Draft>) => void;
@@ -33,6 +34,7 @@ export function Inspector({
   onChromeChange: (config: ChromeConfig) => void;
   onRegenerateChrome: () => void;
   onExpand: (tab: CodeLang) => void;
+  onEditCardCss: () => void;
 }) {
   const [tab, setTab] = useState<Tab>("look");
 
@@ -79,6 +81,7 @@ export function Inspector({
                 kind="card"
                 value={draft.cardStyle}
                 onChange={(v) => onPatch({ cardStyle: v as ThemeCardStyle })}
+                onEditCustom={onEditCardCss}
               />
             </Group>
             <Group title="Buttons" sub="Surface treatment for action buttons." defaultOpen={false}>

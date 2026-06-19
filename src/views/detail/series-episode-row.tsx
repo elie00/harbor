@@ -1,4 +1,4 @@
-import { Check, Play } from "lucide-react";
+import { Check, Eye, Play } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Poster } from "@/components/poster";
 import type { Meta } from "@/lib/cinemeta";
@@ -29,7 +29,7 @@ export function EpisodeRow({
   onContextMenu?: (e: React.MouseEvent, season: number, episode: number, watched: boolean) => void;
 }) {
   const t = useT();
-  const { openPicker } = useView();
+  const { openPicker, openEpisodeDetail } = useView();
   const { settings } = useSettings();
   const tmdbStill = ep.stillPath ? `https://image.tmdb.org/t/p/w300${ep.stillPath}` : undefined;
   const candidates = useMemo(() => {
@@ -135,6 +135,15 @@ export function EpisodeRow({
             </p>
           )}
         </div>
+      </button>
+      <button
+        type="button"
+        onClick={() => openEpisodeDetail(meta.id, ep.seasonNumber, ep.episodeNumber, meta)}
+        aria-label={t("Episode details")}
+        title={t("Episode details")}
+        className="flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full text-ink-subtle transition-colors hover:bg-elevated hover:text-ink"
+      >
+        <Eye size={18} strokeWidth={2} />
       </button>
       <EpisodeDownloadButton meta={meta} episode={playEpisode} />
     </div>

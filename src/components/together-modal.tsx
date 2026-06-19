@@ -5,6 +5,7 @@ import { useSettings } from "@/lib/settings";
 import { useTogether } from "@/lib/together/provider";
 import { useSelfIdentity } from "@/lib/together/use-self-identity";
 import { useView } from "@/lib/view";
+import { useT } from "@/lib/i18n";
 import { Tooltip } from "@/views/detail/tooltip";
 import { Avatar } from "./together-modal/avatar";
 import { ChatPanel } from "./together-modal/chat-panel";
@@ -25,6 +26,7 @@ export function TogetherPopover({
   const { openSettings, openPicker, topKind } = useView();
   const { settings, update } = useSettings();
   const { avatar: selfAvatar, color: selfColor } = useSelfIdentity();
+  const t = useT();
   const [joinCode, setJoinCode] = useState("");
   const [draftName, setDraftName] = useState(displayName);
   const [copied, setCopied] = useState(false);
@@ -105,7 +107,7 @@ export function TogetherPopover({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Watch together"
+      aria-label={t("Watch together")}
       className={`harbor-together-surface flex max-h-[80vh] w-[400px] flex-col gap-4 overflow-y-auto border border-edge p-5 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)] animate-popover-in ${
         connectStyle === "tab"
           ? placement === "above-left"
@@ -118,13 +120,13 @@ export function TogetherPopover({
     >
       <header className="flex items-center justify-between gap-3">
         <h2 className="text-[14px] font-semibold tracking-tight text-ink">
-          {view === "link" ? "Invite via link" : "Watch together"}
+          {view === "link" ? t("Invite via link") : t("Watch together")}
         </h2>
-        <Tooltip label={view === "link" ? "Back" : "Invite via link"} side="bottom">
+        <Tooltip label={view === "link" ? t("Back") : t("Invite via link")} side="bottom">
           <button
             type="button"
             onClick={() => setView((v) => (v === "link" ? "default" : "link"))}
-            aria-label={view === "link" ? "Close invite link panel" : "Open invite link panel"}
+            aria-label={view === "link" ? t("Close invite link panel") : t("Open invite link panel")}
             aria-pressed={view === "link"}
             className={`flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-[10.5px] font-bold uppercase tracking-[0.16em] transition-colors ${
               view === "link"
@@ -133,7 +135,7 @@ export function TogetherPopover({
             }`}
           >
             <LinkGlyph />
-            Invite
+            {t("Invite")}
           </button>
         </Tooltip>
       </header>
@@ -154,19 +156,18 @@ export function TogetherPopover({
       {view === "default" && !enabled && (
         <div className="flex flex-col gap-3 rounded-xl border border-edge bg-canvas/60 p-3.5">
           <div>
-            <p className="text-[13px] text-ink">Watch Together needs a relay.</p>
+            <p className="text-[13px] text-ink">{t("Watch Together needs a relay.")}</p>
             <p className="mt-1 text-[12px] leading-relaxed text-ink-muted">
-              A relay is a tiny Cloudflare Worker that passes play/pause/seek messages
-              between you and your friends. No video data ever touches it. Deploy your
-              own in one click (free tier is plenty), or paste a friend's invite link to
-              use theirs.
+              {t(
+                "A relay is a tiny Cloudflare Worker that passes play/pause/seek messages between you and your friends. No video data ever touches it. Deploy your own in one click (free tier is plenty), or paste a friend's invite link to use theirs.",
+              )}
             </p>
           </div>
           <input
             value={joinCode}
             onChange={(e) => setJoinCode(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleJoin()}
-            placeholder="Paste invite link"
+            placeholder={t("Paste invite link")}
             className="h-10 rounded-lg border border-edge bg-canvas px-3 text-[12px] text-ink transition-colors focus:border-accent"
           />
           <div className="flex items-center gap-2">
@@ -175,13 +176,13 @@ export function TogetherPopover({
               disabled={!joinCode.trim()}
               className="inline-flex h-9 items-center justify-center rounded-lg bg-ink px-3 text-[13px] font-medium text-canvas transition-transform hover:scale-[1.02] disabled:opacity-40 disabled:hover:scale-100"
             >
-              Join
+              {t("Join")}
             </button>
             <button
               onClick={goToSettings}
               className="inline-flex h-9 items-center justify-center rounded-lg border border-edge px-3 text-[13px] font-medium text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
             >
-              Open Settings
+              {t("Open Settings")}
             </button>
           </div>
         </div>
@@ -190,7 +191,7 @@ export function TogetherPopover({
       {view === "default" && enabled && !inSession && (
         <>
           <label className="flex flex-col gap-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-wider text-ink-subtle">Your name</span>
+            <span className="text-[11px] font-medium uppercase tracking-wider text-ink-subtle">{t("Your name")}</span>
             <input
               value={draftName}
               onChange={(e) => setDraftName(e.target.value)}
@@ -207,12 +208,12 @@ export function TogetherPopover({
             className="flex h-11 items-center justify-center gap-2 rounded-xl bg-ink text-[13.5px] font-medium text-canvas transition-transform hover:scale-[1.01] disabled:opacity-40 disabled:hover:scale-100"
           >
             <Plus size={15} strokeWidth={2.2} />
-            {connecting ? "Starting…" : "Start a new room"}
+            {connecting ? t("Starting…") : t("Start a new room")}
           </button>
 
           <div className="flex items-center gap-3 text-[10.5px] uppercase tracking-wider text-ink-subtle">
             <span className="h-px flex-1 bg-edge-soft" />
-            <span>or join</span>
+            <span>{t("or join")}</span>
             <span className="h-px flex-1 bg-edge-soft" />
           </div>
 
@@ -237,11 +238,11 @@ export function TogetherPopover({
                 disabled={joinCode.trim().length === 0 || connecting}
                 className="h-10 rounded-lg border border-edge px-4 text-[13px] font-medium text-ink transition-colors hover:bg-elevated disabled:opacity-40 disabled:hover:bg-transparent"
               >
-                Join
+                {t("Join")}
               </button>
             </div>
             <p className="px-1 text-[10.5px] text-ink-subtle">
-              or paste an invite link
+              {t("or paste an invite link")}
             </p>
           </div>
 
@@ -252,7 +253,7 @@ export function TogetherPopover({
                 onClick={retrySession}
                 className="self-start rounded-md border border-danger/40 px-2.5 py-1 text-[11.5px] font-medium text-danger transition-colors hover:bg-danger/20"
               >
-                Try again
+                {t("Try again")}
               </button>
             </div>
           )}
@@ -265,13 +266,13 @@ export function TogetherPopover({
 
           <div className="flex items-center justify-between rounded-xl border border-edge bg-canvas/60 px-3.5 py-2.5">
             <div className="flex flex-col">
-              <span className="text-[10.5px] uppercase tracking-wider text-ink-subtle">Room code</span>
+              <span className="text-[10.5px] uppercase tracking-wider text-ink-subtle">{t("Room code")}</span>
               <span className="font-mono text-[18px] tracking-[0.35em] text-ink">{snapshot.room}</span>
             </div>
             <button
               onClick={handleCopy}
               className="flex h-9 w-9 items-center justify-center rounded-lg border border-edge text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
-              aria-label="Copy room code"
+              aria-label={t("Copy room code")}
             >
               {copied ? <Check size={15} strokeWidth={2.4} /> : <Copy size={14} strokeWidth={1.9} />}
             </button>
@@ -279,7 +280,7 @@ export function TogetherPopover({
 
           <div className="flex flex-col gap-1.5">
             <span className="text-[10.5px] uppercase tracking-wider text-ink-subtle">
-              {participants.length} watching
+              {t("{n} watching", { n: participants.length })}
             </span>
             <ul className="flex flex-wrap gap-1.5">
               {participants.map((p) => {
@@ -317,7 +318,7 @@ export function TogetherPopover({
           >
             <span className="flex items-center gap-2">
               <MousePointer2 size={13} strokeWidth={1.9} />
-              Show cursors
+              {t("Show cursors")}
             </span>
             <span
               aria-hidden
@@ -338,7 +339,7 @@ export function TogetherPopover({
             className="flex h-10 items-center justify-center gap-1.5 rounded-lg border border-edge text-[12.5px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
           >
             <LogOut size={13} strokeWidth={1.9} />
-            Leave room
+            {t("Leave room")}
           </button>
         </>
       )}

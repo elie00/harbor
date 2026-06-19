@@ -1,5 +1,6 @@
 import { Plus, X } from "lucide-react";
 import { createPortal } from "react-dom";
+import { useT } from "@/lib/i18n";
 import { useProfiles } from "@/lib/profiles";
 import { EditorView } from "./editor-view";
 import { PasswordPrompt } from "./password-prompt";
@@ -7,6 +8,7 @@ import { ProfileTile } from "./profile-tile";
 
 export function ProfilePickerModal() {
   const { profiles, activeId, pickerOpen, pickerView, closePicker, setPickerView, selectProfile } = useProfiles();
+  const t = useT();
 
   if (!pickerOpen) return null;
 
@@ -21,7 +23,7 @@ export function ProfilePickerModal() {
           onClick={closePicker}
           style={{ position: "fixed", top: 24, right: 24, zIndex: 190 }}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-black/55 text-white/85 ring-1 ring-white/15 transition-colors hover:bg-black/75 hover:text-white"
-          aria-label="Close"
+          aria-label={t("common.close")}
         >
           <X size={18} />
         </button>
@@ -78,14 +80,15 @@ function ListView({
   onSelect: (id: string) => void;
 }) {
   const { profiles, activeProfile } = useProfiles();
+  const t = useT();
   const isPrimary = !!activeProfile?.isPrimary;
   return (
     <div className="flex flex-col items-center gap-10 animate-in fade-in duration-300">
       <div className="flex flex-col items-center gap-2">
         <h1 className="font-display text-[40px] font-medium tracking-tight text-ink">
-          Who's watching?
+          {t("Who's watching?")}
         </h1>
-        <p className="text-[14px] text-ink-muted">Pick a profile to continue.</p>
+        <p className="text-[14px] text-ink-muted">{t("Pick a profile to continue.")}</p>
       </div>
       <div className="flex flex-wrap items-start justify-center gap-x-10 gap-y-8">
         {profiles.map((p) => {
@@ -106,33 +109,35 @@ function ListView({
 }
 
 function AddProfileButton({ onClick }: { onClick: () => void }) {
+  const t = useT();
   return (
     <button
       type="button"
       onClick={onClick}
       className="group flex flex-col items-center gap-2 outline-none"
-      aria-label="Add profile"
+      aria-label={t("Add profile")}
     >
       <span className="flex h-24 w-24 items-center justify-center rounded-full border-2 border-dashed border-edge text-ink-subtle transition-all duration-200 group-hover:scale-[1.04] group-hover:border-ink group-hover:text-ink">
         <Plus size={28} strokeWidth={2.2} />
       </span>
       <span className="text-[14px] font-medium text-ink-muted transition-colors group-hover:text-ink">
-        Add profile
+        {t("Add profile")}
       </span>
     </button>
   );
 }
 
 function NotFoundFallback({ onBack }: { onBack: () => void }) {
+  const t = useT();
   return (
     <div className="flex flex-col items-center gap-4">
-      <p className="text-[14px] text-ink-muted">Profile not found.</p>
+      <p className="text-[14px] text-ink-muted">{t("Profile not found.")}</p>
       <button
         type="button"
         onClick={onBack}
         className="h-10 rounded-xl bg-ink px-5 text-[13px] font-semibold text-canvas"
       >
-        Back
+        {t("common.back")}
       </button>
     </div>
   );

@@ -172,7 +172,7 @@ export const ContinueCard = memo(function ContinueCard({ item, watched = false, 
       const epNum = Number((item.state?.video_id ?? "").split(":")[2]);
       if (Number.isFinite(epNum) && epNum > 0) episode = { season: 1, episode: epNum };
     }
-    openPicker(meta, episode, { autoPlay: settings.instantPlay });
+    openPicker(meta, episode, { autoPlay: settings.instantPlay, resume: true });
   };
 
   return (

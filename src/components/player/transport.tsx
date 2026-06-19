@@ -280,6 +280,8 @@ export function Transport({
     title,
     subtitle,
     titleClickable,
+    titleScale: settings.playerTitleScale,
+    titleSeriesFirst: settings.playerTitleSeriesFirst,
     onBack,
     onTitleClick: () => setCastModalOpen(true),
     meta,
@@ -339,6 +341,7 @@ export function Transport({
 
       <div
         ref={controlsRef}
+        dir="ltr"
         className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col gap-2.5 bg-gradient-to-t from-black/70 via-black/25 to-transparent ${
           tight ? "px-3 pt-6 pb-3" : "px-7 pt-10 pb-5"
         } transition-opacity duration-300 ${visible ? "opacity-100" : "opacity-0"}`}

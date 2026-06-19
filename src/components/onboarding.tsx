@@ -9,6 +9,7 @@ import { StremioStep } from "@/components/onboarding/stremio-step";
 import { SubtitlesStep } from "@/components/onboarding/subtitles-step";
 import { TmdbStep } from "@/components/onboarding/tmdb-step";
 import { WelcomeStep } from "@/components/onboarding/welcome-step";
+import { useT } from "@/lib/i18n";
 import { useOnboarding } from "@/lib/onboarding";
 
 type StepId = "splash" | "welcome" | "layout" | "tmdb" | "stremio" | "streaming" | "subtitles" | "done";
@@ -16,6 +17,7 @@ const STEPS: StepId[] = ["splash", "welcome", "layout", "tmdb", "stremio", "stre
 
 export function OnboardingModal() {
   const { onboarded, finishOnboarding } = useOnboarding();
+  const t = useT();
   const [stepIdx, setStepIdx] = useState(0);
   const [closing, setClosing] = useState(false);
 
@@ -51,7 +53,7 @@ export function OnboardingModal() {
         {!isSplash && (
           <button
             onClick={finish}
-            aria-label="Skip setup"
+            aria-label={t("Skip setup")}
             className="absolute end-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
           >
             <X size={17} />
@@ -87,7 +89,7 @@ export function OnboardingModal() {
                     onClick={next}
                     className="animate-skip-in h-11 rounded-full px-4 text-[13px] font-medium text-ink-subtle transition-colors hover:text-ink"
                   >
-                    Skip for now
+                    {t("Skip for now")}
                   </button>
                 )}
                 {stepIdx > 1 && stepIdx < STEPS.length - 1 && (
@@ -95,7 +97,7 @@ export function OnboardingModal() {
                     onClick={back}
                     className="h-11 rounded-full px-5 text-[14px] font-medium text-ink-muted transition-colors hover:text-ink"
                   >
-                    Back
+                    {t("Back")}
                   </button>
                 )}
                 {stepIdx < STEPS.length - 1 ? (
@@ -103,7 +105,7 @@ export function OnboardingModal() {
                     onClick={next}
                     className="flex h-11 items-center gap-2 rounded-full bg-ink px-6 text-[14px] font-semibold text-canvas transition-transform hover:scale-[1.03] active:scale-[0.97]"
                   >
-                    {step === "welcome" ? "Get Started" : "Continue"}
+                    {step === "welcome" ? t("Get Started") : t("Continue")}
                     <ArrowRight size={15} strokeWidth={2.4} className="dir-icon" />
                   </button>
                 ) : (
@@ -111,7 +113,7 @@ export function OnboardingModal() {
                     onClick={finish}
                     className="flex h-11 items-center gap-2 rounded-full bg-ink px-6 text-[14px] font-semibold text-canvas transition-transform hover:scale-[1.03] active:scale-[0.97]"
                   >
-                    Enter Harbor
+                    {t("Enter Harbor")}
                     <ArrowRight size={15} strokeWidth={2.4} className="dir-icon" />
                   </button>
                 )}

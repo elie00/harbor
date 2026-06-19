@@ -279,8 +279,9 @@ export function SeriesEpisodes({
         <CinemetaFallback meta={meta} videos={cinemetaVideos} season={active} />
       )}
 
-      {!loading && enrichedEpisodes.length > 0 && settings.episodeLayout === "strip" && (
+      {!loading && enrichedEpisodes.length > 0 && settings.episodeLayout !== "list" && (
         <EpisodeStrip
+          layout={settings.episodeLayout === "grid" ? "grid" : "strip"}
           meta={meta}
           episodes={enrichedEpisodes}
           progressFor={(ep) =>
@@ -306,7 +307,7 @@ export function SeriesEpisodes({
         />
       )}
 
-      {!loading && enrichedEpisodes.length > 0 && settings.episodeLayout !== "strip" && (
+      {!loading && enrichedEpisodes.length > 0 && settings.episodeLayout === "list" && (
         <div className="flex flex-col gap-1">
           {enrichedEpisodes.map((ep) => (
             <EpisodeRow

@@ -1,6 +1,8 @@
 import { Check, Loader2, Wifi, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSettings } from "@/lib/settings";
+import { t as tr } from "@/lib/i18n";
+import { useT } from "@/lib/i18n";
 import { ToggleRow, settingsAnchor } from "../shared";
 
 type TestResult = { ok: boolean; message: string };
@@ -25,16 +27,17 @@ async function probeServer(url: string): Promise<TestResult> {
     const timer = window.setTimeout(() => ctrl.abort(), 1500);
     const res = await fetch(`${url}/settings`, { method: "GET", signal: ctrl.signal });
     window.clearTimeout(timer);
-    if (!res.ok) return { ok: false, message: `The server answered with status ${res.status}. Is that a streaming server?` };
+    if (!res.ok) return { ok: false, message: tr("The server answered with status {status}. Is that a streaming server?", { status: res.status }) };
     const ms = Math.max(1, Math.round(performance.now() - started));
-    return { ok: true, message: `Server reachable in ${ms}ms. Harbor will use it for torrent streaming.` };
+    return { ok: true, message: tr("Server reachable in {ms}ms. Harbor will use it for torrent streaming.", { ms }) };
   } catch {
-    return { ok: false, message: "Could not reach the server within 1.5 seconds. Check the address and that the server machine is online." };
+    return { ok: false, message: tr("Could not reach the server within 1.5 seconds. Check the address and that the server machine is online.") };
   }
 }
 
 export function RemoteServerSection() {
   const { settings, update } = useSettings();
+  const t = useT();
   const saved = settings.remoteStreamServerUrl;
   const [draft, setDraft] = useState(saved);
   const [reach, setReach] = useState<boolean | null>(null);
@@ -80,14 +83,14 @@ export function RemoteServerSection() {
     <div id={settingsAnchor("Remote streaming server")} className="scroll-mt-28 flex flex-col gap-4 rounded-2xl border border-edge-soft bg-canvas/40 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-0.5">
-          <span className="text-[14px] font-medium text-ink">Remote streaming server</span>
+          <span className="text-[14px] font-medium text-ink">{t("Remote streaming server")}</span>
           <span className="text-[12.5px] text-ink-subtle">
-            Point Harbor at a streaming server on another machine, like the Stremio service on a home server. Torrents download and stream from that machine instead of this one.
+            {t("Point Harbor at a streaming server on another machine, like the Stremio service on a home server. Torrents download and stream from that machine instead of this one.")}
           </span>
         </div>
         <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${pill.chip}`}>
           <span className={`h-1.5 w-1.5 rounded-full ${pill.dot}`} />
-          {pill.label}
+          {t(pill.label)}
         </span>
       </div>
 
@@ -111,7 +114,7 @@ export function RemoteServerSection() {
             onClick={() => update({ remoteStreamServerUrl: "" })}
             className="h-11 shrink-0 rounded-xl border border-edge px-4 text-[13px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
           >
-            Forget
+            {t("Forget")}
           </button>
         )}
       </div>
@@ -119,16 +122,16 @@ export function RemoteServerSection() {
       {saved && (
         <>
           <ToggleRow
-            label="Use exclusively (never fall back to local)"
-            sub="If the server is unreachable, playback fails instead of streaming locally. Use this when your VPN runs on the server machine and torrent traffic must never leave this one."
+            label={t("Use exclusively (never fall back to local)")}
+            sub={t("If the server is unreachable, playback fails instead of streaming locally. Use this when your VPN runs on the server machine and torrent traffic must never leave this one.")}
             value={settings.remoteStreamServerStrict}
             onChange={(v) => update({ remoteStreamServerStrict: v })}
           />
           <div className="flex items-center justify-between gap-3 rounded-xl border border-edge-soft bg-canvas/40 px-4 py-3">
             <div className="flex min-w-0 flex-col">
-              <span className="text-[13px] font-medium text-ink">Test connection</span>
+              <span className="text-[13px] font-medium text-ink">{t("Test connection")}</span>
               <span className="text-[11.5px] text-ink-subtle">
-                Probes the server's settings endpoint from this device.
+                {t("Probes the server's settings endpoint from this device.")}
               </span>
             </div>
             <button
@@ -138,7 +141,7 @@ export function RemoteServerSection() {
               className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-edge px-3 text-[12.5px] text-ink-muted transition-colors hover:bg-elevated hover:text-ink disabled:opacity-60"
             >
               {testing ? <Loader2 size={13} strokeWidth={1.9} className="animate-spin" /> : <Wifi size={13} strokeWidth={1.9} />}
-              {testing ? "Testing" : "Run test"}
+              {testing ? t("Testing") : t("Run test")}
             </button>
           </div>
           {result && (
@@ -148,7 +151,7 @@ export function RemoteServerSection() {
               </span>
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <span className={`text-[12.5px] font-medium ${result.ok ? "text-ink" : "text-danger"}`}>
-                  {result.ok ? "Server reachable" : "Test failed"}
+                  {result.ok ? t("Server reachable") : t("Test failed")}
                 </span>
                 <span className="text-[11.5px] text-ink-subtle">{result.message}</span>
               </div>

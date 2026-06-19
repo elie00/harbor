@@ -18,6 +18,7 @@ export function EpisodeStrip({
   thumbnailFor,
   spoilerFor,
   onContextMenu,
+  layout = "strip",
 }: {
   meta: Meta;
   episodes: Episode[];
@@ -25,19 +26,39 @@ export function EpisodeStrip({
   thumbnailFor: (ep: Episode) => string | undefined;
   spoilerFor?: (ep: Episode) => SpoilerMask;
   onContextMenu?: (e: React.MouseEvent, season: number, episode: number, watched: boolean) => void;
+  layout?: "strip" | "grid";
 }) {
+  if (layout === "grid") {
+    return (
+      <div className="grid gap-x-4 gap-y-5 [grid-template-columns:repeat(auto-fill,minmax(200px,1fr))]">
+        {episodes.map((ep) => (
+          <EpisodeStripCard
+            key={ep.id}
+            grid
+            meta={meta}
+            ep={ep}
+            progress={progressFor(ep)}
+            cinemetaThumbnail={thumbnailFor(ep)}
+            spoiler={spoilerFor?.(ep)}
+            onContextMenu={onContextMenu}
+          />
+        ))}
+      </div>
+    );
+  }
   return (
     <DragStrip itemCount={episodes.length}>
       {episodes.map((ep) => (
-        <EpisodeStripCard
-          key={ep.id}
-          meta={meta}
-          ep={ep}
-          progress={progressFor(ep)}
-          cinemetaThumbnail={thumbnailFor(ep)}
-          spoiler={spoilerFor?.(ep)}
-          onContextMenu={onContextMenu}
-        />
+        <div key={ep.id} className="w-[244px] shrink-0">
+          <EpisodeStripCard
+            meta={meta}
+            ep={ep}
+            progress={progressFor(ep)}
+            cinemetaThumbnail={thumbnailFor(ep)}
+            spoiler={spoilerFor?.(ep)}
+            onContextMenu={onContextMenu}
+          />
+        </div>
       ))}
     </DragStrip>
   );
@@ -50,6 +71,7 @@ function EpisodeStripCard({
   cinemetaThumbnail,
   spoiler,
   onContextMenu,
+  grid = false,
 }: {
   meta: Meta;
   ep: Episode;
@@ -57,6 +79,7 @@ function EpisodeStripCard({
   cinemetaThumbnail?: string;
   spoiler?: SpoilerMask;
   onContextMenu?: (e: React.MouseEvent, season: number, episode: number, watched: boolean) => void;
+  grid?: boolean;
 }) {
   const t = useT();
   const { openPicker } = useView();
@@ -89,7 +112,7 @@ function EpisodeStripCard({
           { autoPlay: settings.instantPlay },
         )
       }
-      className="group flex w-[244px] shrink-0 flex-col gap-2.5 text-start"
+      className="group flex w-full flex-col gap-2.5 text-start"
     >
       <div className="relative aspect-video overflow-hidden rounded-xl">
         <div className={spoiler?.thumb ? SPOILER_THUMB_CLASS : undefined}>
@@ -121,7 +144,7 @@ function EpisodeStripCard({
         )}
       </div>
       <div className="flex flex-col gap-0.5 px-0.5">
-        <span className={`truncate text-[13.5px] font-semibold text-ink ${spoiler?.title ? SPOILER_TEXT_CLASS : ""}`}>
+        <span className={`${grid ? "line-clamp-2" : "truncate"} text-[13.5px] font-semibold text-ink ${spoiler?.title ? SPOILER_TEXT_CLASS : ""}`}>
           {ep.name || t("Episode {n}", { n: ep.episodeNumber })}
         </span>
         <span className="text-[11.5px] text-ink-subtle">

@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { applyTheme } from "@/lib/theme";
 import { loadBgImage, saveBgImage } from "@/lib/theme-storage";
-import { setTmdbLanguage } from "@/lib/providers/tmdb/tmdb-client";
+import { effectiveTmdbLanguage, setTmdbLanguage } from "@/lib/providers/tmdb/tmdb-client";
 import { setPosterBaseUrl } from "@/lib/providers/rpdb";
 import { setMdblistBatchKey } from "@/lib/providers/mdblist-batch";
 import { setUiLanguage } from "@/lib/i18n";
@@ -65,6 +65,18 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [settings]);
+
+  const tmdbLangRef = useRef<string | null>(null);
+  useEffect(() => {
+    const eff = effectiveTmdbLanguage();
+    if (tmdbLangRef.current === null) {
+      tmdbLangRef.current = eff;
+      return;
+    }
+    if (tmdbLangRef.current === eff) return;
+    tmdbLangRef.current = eff;
+    window.location.reload();
+  }, [settings.tmdbLanguage, settings.uiLanguage]);
 
   useEffect(() => {
     applyTheme(settings.theme);

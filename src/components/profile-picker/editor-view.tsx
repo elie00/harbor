@@ -25,6 +25,7 @@ import {
   type Profile,
   type ProfileColor,
 } from "@/lib/profiles";
+import { useT } from "@/lib/i18n";
 import { hashProfilePassword, verifyProfilePassword } from "@/lib/profile-password";
 import { fetchTraktAvatar } from "@/lib/trakt/profile";
 import { useTrakt } from "@/lib/trakt/provider";
@@ -61,6 +62,7 @@ export function EditorView({
   const { isConnected: anilistConnected, avatar: anilistAvatar } = useAnilist();
   const { isConnected: simklConnected } = useSimkl();
   const { update } = useSettings();
+  const t = useT();
   const [loadingTraktAvatar, setLoadingTraktAvatar] = useState(false);
   const [traktAvatarError, setTraktAvatarError] = useState<string | null>(null);
   const [loadingAnilistAvatar, setLoadingAnilistAvatar] = useState(false);
@@ -116,14 +118,14 @@ export function EditorView({
     try {
       const url = await fetchTraktAvatar();
       if (!url) {
-        setTraktAvatarError("Couldn't find a Trakt avatar on your account.");
+        setTraktAvatarError(t("Couldn't find a Trakt avatar on your account."));
         setTimeout(() => setTraktAvatarError(null), 4000);
         return;
       }
       setAvatar(url);
       setAvatarSource("trakt");
     } catch {
-      setTraktAvatarError("Couldn't reach Trakt.");
+      setTraktAvatarError(t("Couldn't reach Trakt."));
       setTimeout(() => setTraktAvatarError(null), 4000);
     } finally {
       setLoadingTraktAvatar(false);
@@ -136,14 +138,14 @@ export function EditorView({
     try {
       const url = await fetchAnilistAvatar();
       if (!url) {
-        setAnilistAvatarError("Couldn't find an AniList avatar on your account.");
+        setAnilistAvatarError(t("Couldn't find an AniList avatar on your account."));
         setTimeout(() => setAnilistAvatarError(null), 4000);
         return;
       }
       setAvatar(url);
       setAvatarSource("anilist");
     } catch {
-      setAnilistAvatarError("Couldn't reach AniList.");
+      setAnilistAvatarError(t("Couldn't reach AniList."));
       setTimeout(() => setAnilistAvatarError(null), 4000);
     } finally {
       setLoadingAnilistAvatar(false);
@@ -156,14 +158,14 @@ export function EditorView({
     try {
       const url = await fetchSimklAvatar();
       if (!url) {
-        setSimklAvatarError("Couldn't find a Simkl avatar on your account.");
+        setSimklAvatarError(t("Couldn't find a Simkl avatar on your account."));
         setTimeout(() => setSimklAvatarError(null), 4000);
         return;
       }
       setAvatar(url);
       setAvatarSource("simkl");
     } catch {
-      setSimklAvatarError("Couldn't reach Simkl.");
+      setSimklAvatarError(t("Couldn't reach Simkl."));
       setTimeout(() => setSimklAvatarError(null), 4000);
     } finally {
       setLoadingSimklAvatar(false);
@@ -201,8 +203,8 @@ export function EditorView({
   if (subView.kind === "pin-set") {
     return (
       <PinEntry
-        title={editing ? `Set a PIN for ${trimmed || editing.name}` : "Set a PIN"}
-        subtitle="Pick a 4-digit PIN. You'll be asked for it before this profile opens."
+        title={editing ? t("Set a PIN for {name}", { name: trimmed || editing.name }) : t("Set a PIN")}
+        subtitle={t("Pick a 4-digit PIN. You'll be asked for it before this profile opens.")}
         mode="set"
         onBack={() => setSubView({ kind: "security" })}
         onComplete={async (pin) => {
@@ -222,8 +224,8 @@ export function EditorView({
     const targetHash = editing.passwordHash;
     return (
       <PinEntry
-        title="Enter current PIN"
-        subtitle="Confirm your current PIN, then pick a new one."
+        title={t("Enter current PIN")}
+        subtitle={t("Confirm your current PIN, then pick a new one.")}
         mode="verify"
         onBack={() => setSubView({ kind: "security" })}
         verify={(pin) => verifyProfilePassword(pin, targetHash)}
@@ -238,8 +240,8 @@ export function EditorView({
     const targetHash = editing.passwordHash;
     return (
       <PinEntry
-        title="Enter current PIN"
-        subtitle="Confirm your current PIN to remove the lock."
+        title={t("Enter current PIN")}
+        subtitle={t("Confirm your current PIN to remove the lock.")}
         mode="verify"
         onBack={() => setSubView({ kind: "security" })}
         verify={(pin) => verifyProfilePassword(pin, targetHash)}
@@ -299,10 +301,10 @@ export function EditorView({
     <div className="flex w-full max-w-[640px] flex-col gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
       <div className="flex flex-col items-center gap-0.5">
         <span className="text-[10.5px] font-bold uppercase tracking-[0.32em] text-ink-subtle">
-          Harbor identity
+          {t("Harbor identity")}
         </span>
         <h1 className="font-display text-[26px] font-medium leading-tight tracking-tight text-ink">
-          {editing ? `Edit ${editing.name}` : "New profile"}
+          {editing ? t("Edit {name}", { name: editing.name }) : t("profile.new")}
         </h1>
       </div>
 
@@ -323,7 +325,7 @@ export function EditorView({
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && void submit()}
               autoFocus
-              placeholder="Display name"
+              placeholder={t("Display name")}
               maxLength={32}
               className="h-11 rounded-xl border border-edge bg-canvas px-3.5 text-[15px] font-medium text-ink outline-none transition-colors focus:border-ink-subtle"
             />
@@ -333,7 +335,7 @@ export function EditorView({
                 onClick={() => fileRef.current?.click()}
                 className="h-8 rounded-lg border border-edge-soft px-2.5 text-[12px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
               >
-                Upload photo
+                {t("Upload photo")}
               </button>
               {traktConnected && (
                 <button
@@ -347,7 +349,7 @@ export function EditorView({
                   ) : (
                     <img src={traktLogo} alt="" className="h-3 w-3 object-contain" />
                   )}
-                  Use Trakt avatar
+                  {t("Use Trakt avatar")}
                 </button>
               )}
               {anilistConnected && (
@@ -364,7 +366,7 @@ export function EditorView({
                   ) : (
                     <Link2 size={12} />
                   )}
-                  Use AniList avatar
+                  {t("Use AniList avatar")}
                 </button>
               )}
               {simklConnected && (
@@ -379,7 +381,7 @@ export function EditorView({
                   ) : (
                     <img src={simklLogo} alt="" className="h-3 w-3 object-contain" />
                   )}
-                  Use Simkl avatar
+                  {t("Use Simkl avatar")}
                 </button>
               )}
               {avatar && (
@@ -391,7 +393,7 @@ export function EditorView({
                   }}
                   className="h-8 rounded-lg border border-edge-soft px-2.5 text-[12px] font-medium text-ink-subtle transition-colors hover:border-danger/40 hover:text-danger"
                 >
-                  Remove
+                  {t("common.remove")}
                 </button>
               )}
             </div>
@@ -420,22 +422,22 @@ export function EditorView({
       {showAdvanced && canShare && primary && (
         <div className="flex flex-col gap-1.5">
           <span className="text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
-            Stremio account
+            {t("Stremio account")}
           </span>
           <div className="flex flex-col gap-1.5">
             <ShareOption
               active={shareWith === primary.id}
               onClick={() => setShareWith(primary.id)}
               icon={<Link2 size={14} strokeWidth={2.2} />}
-              title={`Share with ${primary.name}`}
-              sub="Use the primary profile's Stremio library, watchlist, and addons."
+              title={t("Share with {name}", { name: primary.name })}
+              sub={t("Use the primary profile's Stremio library, watchlist, and addons.")}
             />
             <ShareOption
               active={shareWith === null}
               onClick={() => setShareWith(null)}
               icon={<UserIcon size={14} strokeWidth={2.2} />}
-              title="Use a separate Stremio account"
-              sub="Sign in from the sidebar after saving. Library and addons stay separate."
+              title={t("Use a separate Stremio account")}
+              sub={t("Sign in from the sidebar after saving. Library and addons stay separate.")}
             />
           </div>
         </div>
@@ -448,7 +450,7 @@ export function EditorView({
             onClick={onCancel}
             className="h-10 rounded-xl border border-edge-soft px-4 text-[13px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
           >
-            Cancel
+            {t("common.cancel")}
           </button>
           {editing && !isPrimary && canEditAdvanced && (
             !confirmingDelete ? (
@@ -458,17 +460,17 @@ export function EditorView({
                 className="flex items-center gap-1.5 text-[12px] font-medium text-ink-subtle transition-colors hover:text-red-300"
               >
                 <Trash2 size={12} />
-                Delete profile
+                {t("Delete profile")}
               </button>
             ) : (
               <div className="flex items-center gap-2 text-[12px]">
-                <span className="text-red-200">Delete this profile?</span>
+                <span className="text-red-200">{t("Delete this profile?")}</span>
                 <button
                   type="button"
                   onClick={() => setConfirmingDelete(false)}
                   className="text-ink-muted hover:text-ink"
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </button>
                 <button
                   type="button"
@@ -478,7 +480,7 @@ export function EditorView({
                   }}
                   className="rounded-md bg-red-400/20 px-2 py-0.5 font-semibold text-red-200 hover:bg-red-400/30"
                 >
-                  Confirm
+                  {t("common.confirm")}
                 </button>
               </div>
             )
@@ -490,7 +492,7 @@ export function EditorView({
           disabled={!canSave}
           className="flex h-10 items-center gap-1.5 rounded-xl bg-ink px-5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {editing ? "Save changes" : "Create profile"}
+          {editing ? t("Save changes") : t("Create profile")}
         </button>
       </div>
     </div>
@@ -498,17 +500,18 @@ export function EditorView({
 }
 
 function BlockedView({ onBack }: { onBack: () => void }) {
+  const t = useT();
   return (
     <div className="flex flex-col items-center gap-4">
       <p className="text-[14px] text-ink-muted">
-        Only the primary profile can edit other profiles.
+        {t("Only the primary profile can edit other profiles.")}
       </p>
       <button
         type="button"
         onClick={onBack}
         className="h-10 rounded-xl bg-ink px-5 text-[13px] font-semibold text-canvas"
       >
-        Back
+        {t("common.back")}
       </button>
     </div>
   );
@@ -523,12 +526,11 @@ function SecurityRow({
   lockedTabs: HiddenTabs | null;
   onOpen: () => void;
 }) {
+  const t = useT();
   const lockedCount = lockedTabs ? Object.values(lockedTabs).filter(Boolean).length : 0;
-  const pinLabel = locked ? "PIN on" : "PIN off";
+  const pinLabel = locked ? t("PIN on") : t("PIN off");
   const tabsLabel =
-    lockedCount === 0
-      ? "no tab locks"
-      : `${lockedCount} ${lockedCount === 1 ? "tab" : "tabs"} locked`;
+    lockedCount === 0 ? t("no tab locks") : t("{n} tabs locked", { n: lockedCount });
   return (
     <button
       type="button"
@@ -550,7 +552,7 @@ function SecurityRow({
           )}
         </span>
         <div className="flex flex-col gap-0.5">
-          <span className="text-[13.5px] font-semibold text-ink">Security</span>
+          <span className="text-[13.5px] font-semibold text-ink">{t("Security")}</span>
           <span className="text-[12px] text-ink-subtle">
             {pinLabel} · {tabsLabel}
           </span>
@@ -580,6 +582,7 @@ function SecurityView({
   onRemovePin: () => void;
   onOpenTabs: () => void;
 }) {
+  const t = useT();
   const lockedCount = lockedTabs ? Object.values(lockedTabs).filter(Boolean).length : 0;
   return (
     <div className="flex w-full max-w-[560px] flex-col gap-6 animate-in fade-in slide-in-from-bottom-2 duration-200">
@@ -590,18 +593,18 @@ function SecurityView({
           className="flex h-9 items-center gap-1.5 rounded-lg px-2 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-elevated/40 hover:text-ink"
         >
           <ChevronLeft size={14} strokeWidth={2.2} className="dir-icon" />
-          Back
+          {t("common.back")}
         </button>
       </div>
       <div className="flex flex-col items-center gap-2">
         <span className="text-[11px] font-bold uppercase tracking-[0.32em] text-ink-subtle">
-          Profile security
+          {t("Profile security")}
         </span>
         <h1 className="font-display text-[28px] font-medium tracking-tight text-ink">
-          PIN & sidebar locks
+          {t("PIN & sidebar locks")}
         </h1>
         <p className="text-center text-[13.5px] text-ink-muted">
-          Pick a PIN and which sidebar tabs require it.
+          {t("Pick a PIN and which sidebar tabs require it.")}
         </p>
       </div>
 
@@ -623,9 +626,9 @@ function SecurityView({
                 )}
               </span>
               <div className="flex flex-col gap-0.5">
-                <span className="text-[13.5px] font-semibold text-ink">PIN</span>
+                <span className="text-[13.5px] font-semibold text-ink">{t("PIN")}</span>
                 <span className="text-[12px] text-ink-subtle">
-                  {locked ? "4-digit PIN is set." : "No PIN set."}
+                  {locked ? t("4-digit PIN is set.") : t("No PIN set.")}
                 </span>
               </div>
             </div>
@@ -636,7 +639,7 @@ function SecurityView({
                   onClick={onSetPin}
                   className="h-9 rounded-lg bg-ink px-3.5 text-[12.5px] font-semibold text-canvas transition-opacity hover:opacity-90"
                 >
-                  Set PIN
+                  {t("Set PIN")}
                 </button>
               ) : (
                 <>
@@ -645,14 +648,14 @@ function SecurityView({
                     onClick={onChangePin}
                     className="h-9 rounded-lg border border-edge-soft px-3.5 text-[12.5px] font-medium text-ink-muted transition-colors hover:border-edge hover:text-ink"
                   >
-                    Change
+                    {t("Change")}
                   </button>
                   <button
                     type="button"
                     onClick={onRemovePin}
                     className="h-9 rounded-lg border border-edge-soft px-3.5 text-[12.5px] font-medium text-ink-subtle transition-colors hover:border-danger/40 hover:text-danger"
                   >
-                    {editing ? "Remove" : "Clear"}
+                    {editing ? t("common.remove") : t("Clear")}
                   </button>
                 </>
               )}
@@ -676,11 +679,11 @@ function SecurityView({
               <ShieldCheck size={14} strokeWidth={2.2} />
             </span>
             <div className="flex flex-col gap-0.5">
-              <span className="text-[13.5px] font-semibold text-ink">Sidebar access</span>
+              <span className="text-[13.5px] font-semibold text-ink">{t("Sidebar access")}</span>
               <span className="text-[12px] text-ink-subtle">
                 {lockedCount === 0
-                  ? "No locks. All sidebar tabs open without a PIN."
-                  : `${lockedCount} ${lockedCount === 1 ? "tab" : "tabs"} require this profile's PIN.`}
+                  ? t("No locks. All sidebar tabs open without a PIN.")
+                  : t("{n} tabs require this profile's PIN.", { n: lockedCount })}
               </span>
             </div>
           </div>
@@ -762,8 +765,9 @@ function TabsView({
   onBack: () => void;
   onSave: (next: HiddenTabs) => void;
 }) {
+  const t = useT();
   const [tabs, setTabs] = useState<HiddenTabs>({ ...DEFAULT_HIDDEN, ...(initial ?? {}) });
-  const toggle = (key: LockableTab) => setTabs((t) => ({ ...t, [key]: !t[key] }));
+  const toggle = (key: LockableTab) => setTabs((prev) => ({ ...prev, [key]: !prev[key] }));
   const count = Object.values(tabs).filter(Boolean).length;
   return (
     <div className="flex h-full max-h-[calc(100vh-7rem)] w-full max-w-[560px] flex-col gap-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
@@ -774,28 +778,28 @@ function TabsView({
           className="flex h-9 items-center gap-1.5 rounded-lg px-2 text-[12.5px] font-medium text-ink-muted transition-colors hover:bg-elevated/40 hover:text-ink"
         >
           <ChevronLeft size={14} strokeWidth={2.2} className="dir-icon" />
-          Back
+          {t("common.back")}
         </button>
       </div>
       <div className="flex flex-col items-center gap-1">
         <span className="text-[10.5px] font-bold uppercase tracking-[0.32em] text-ink-subtle">
-          Sidebar access
+          {t("Sidebar access")}
         </span>
         <h1 className="font-display text-[24px] font-medium tracking-tight text-ink">
-          Lock sidebar tabs
+          {t("Lock sidebar tabs")}
         </h1>
         <p className="text-center text-[12.5px] text-ink-muted">
-          Locks only activate once a PIN is set.
+          {t("Locks only activate once a PIN is set.")}
         </p>
       </div>
       <div className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto pe-1">
-        {LOCKABLE_TABS.map((t) => (
+        {LOCKABLE_TABS.map((tab) => (
           <button
-            key={t.key}
+            key={tab.key}
             type="button"
-            onClick={() => toggle(t.key)}
+            onClick={() => toggle(tab.key)}
             className={`flex shrink-0 items-center justify-between gap-3 rounded-xl border px-4 py-2.5 text-start transition-colors ${
-              tabs[t.key]
+              tabs[tab.key]
                 ? "border-ink/40 bg-canvas/60"
                 : "border-edge-soft hover:border-edge hover:bg-canvas/40"
             }`}
@@ -803,34 +807,34 @@ function TabsView({
             <div className="flex items-center gap-3">
               <span
                 className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition-colors ${
-                  tabs[t.key] ? "border-ink bg-ink text-canvas" : "border-edge"
+                  tabs[tab.key] ? "border-ink bg-ink text-canvas" : "border-edge"
                 }`}
               >
-                {tabs[t.key] && <Check size={12} strokeWidth={3} />}
+                {tabs[tab.key] && <Check size={12} strokeWidth={3} />}
               </span>
               <span
                 className={`flex h-6 w-6 items-center justify-center ${
-                  tabs[t.key] ? "text-ink" : "text-ink-muted"
+                  tabs[tab.key] ? "text-ink" : "text-ink-muted"
                 }`}
               >
-                <TabIcon iconKey={t.iconKey} />
+                <TabIcon iconKey={tab.iconKey} />
               </span>
-              <span className="text-[13.5px] font-medium text-ink">{t.label}</span>
+              <span className="text-[13.5px] font-medium text-ink">{t(tab.label)}</span>
             </div>
-            {tabs[t.key] && <Lock size={13} strokeWidth={2.2} className="text-ink-muted" />}
+            {tabs[tab.key] && <Lock size={13} strokeWidth={2.2} className="text-ink-muted" />}
           </button>
         ))}
       </div>
       <div className="flex items-center justify-between gap-3">
         <span className="text-[12.5px] text-ink-subtle">
-          {count === 0 ? "No tabs selected" : `${count} ${count === 1 ? "tab" : "tabs"} locked`}
+          {count === 0 ? t("No tabs selected") : t("{n} tabs locked", { n: count })}
         </span>
         <button
           type="button"
           onClick={() => onSave(tabs)}
           className="h-10 rounded-xl bg-ink px-5 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90"
         >
-          Save
+          {t("common.save")}
         </button>
       </div>
     </div>

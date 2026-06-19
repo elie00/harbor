@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import seekPreviewBg from "@/assets/preview/seek-preview.png";
 import { SeekBarVisual } from "@/components/player/transport/seek-bar-visual";
 import { useSettings, type Settings } from "@/lib/settings";
+import { useT } from "@/lib/i18n";
 import { ColorPopoverTrigger } from "../color-picker";
 import { SubField } from "./internals";
 import { ToggleRow } from "../shared";
@@ -37,6 +38,7 @@ const PRESET_COLORS = [
 
 export function SeekBarPanel() {
   const { settings, update } = useSettings();
+  const t = useT();
 
   const heightVal = settings.seekBarHeight ?? 6;
   const dotVal = settings.seekDotSize ?? 16;
@@ -47,33 +49,33 @@ export function SeekBarPanel() {
   return (
     <div className="flex flex-col gap-7">
       <ToggleRow
-        label="Show thumbnail preview on hover"
-        sub="Generates a frame on the fly as you scrub the seek bar. Works on debrid streams and local files."
+        label={t("Show thumbnail preview on hover")}
+        sub={t("Generates a frame on the fly as you scrub the seek bar. Works on debrid streams and local files.")}
         value={settings.seekPreviewEnabled}
         onChange={(v) => update({ seekPreviewEnabled: v })}
       />
       <Preview settings={settings} />
 
-      <SubField label="Bar style">
+      <SubField label={t("Bar style")}>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {STYLES.map((s) => (
             <PickTile
               key={s.id}
               selected={currentStyle === s.id}
               onClick={() => update({ seekBarStyle: s.id })}
-              label={s.label}
-              sub={s.sub}
+              label={t(s.label)}
+              sub={t(s.sub)}
             />
           ))}
         </div>
         {currentStyle === "image" && (
           <p className="mt-1 text-[11px] text-ink-subtle">
-            Image bar active. Pick a style above to switch back, or clear the image below.
+            {t("Image bar active. Pick a style above to switch back, or clear the image below.")}
           </p>
         )}
       </SubField>
 
-      <SubField label="Bar height" value={`${heightVal}px`}>
+      <SubField label={t("Bar height")} value={`${heightVal}px`}>
         <input
           type="range"
           min={3}
@@ -85,7 +87,7 @@ export function SeekBarPanel() {
         />
       </SubField>
 
-      <SubField label="Bar color">
+      <SubField label={t("Bar color")}>
         <div className="flex flex-wrap items-center gap-2">
           {PRESET_COLORS.map((c) => {
             const isSel = (accent || "") === c;
@@ -104,14 +106,14 @@ export function SeekBarPanel() {
                     ? "linear-gradient(135deg, transparent 47%, var(--color-ink-subtle) 47% 53%, transparent 53%)"
                     : undefined,
                 }}
-                aria-label={isDefault ? "Default (gold accent)" : c}
+                aria-label={isDefault ? t("Default (gold accent)") : c}
               />
             );
           })}
           <ColorPopoverTrigger
             value={accent || "#f0c674"}
             onChange={(hex) => update({ seekBarColor: hex })}
-            label={accent ? accent.toUpperCase() : "Custom"}
+            label={accent ? accent.toUpperCase() : t("Custom")}
             highlighted={!!accent && !PRESET_COLORS.includes(accent)}
           />
           {accent && (
@@ -121,13 +123,13 @@ export function SeekBarPanel() {
               className="flex h-8 items-center gap-1 rounded-full bg-raised px-3 text-[11.5px] font-semibold text-ink-muted transition-colors hover:bg-elevated hover:text-ink"
             >
               <RotateCcw size={11} strokeWidth={2.4} />
-              Default
+              {t("Default")}
             </button>
           )}
         </div>
       </SubField>
 
-      <SubField label="Bar image">
+      <SubField label={t("Bar image")}>
         <SeekImageUpload
           value={settings.seekBarImage}
           onSelect={(url) => update({ seekBarImage: url, seekBarStyle: "image" })}
@@ -137,14 +139,14 @@ export function SeekBarPanel() {
               seekBarStyle: settings.seekBarStyle === "image" ? "flat" : settings.seekBarStyle,
             })
           }
-          emptyTitle="Upload a pattern to tile across the bar"
-          hint="Tiles horizontally; the bar's height crops it vertically. Animated GIFs up to 2 MB play."
+          emptyTitle={t("Upload a pattern to tile across the bar")}
+          hint={t("Tiles horizontally; the bar's height crops it vertically. Animated GIFs up to 2 MB play.")}
           targetDim={256}
           targetQuality={0.88}
         />
       </SubField>
 
-      <SubField label="Seek dot shape">
+      <SubField label={t("Seek dot shape")}>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {SHAPES.map((s) => (
             <PickTile
@@ -158,14 +160,14 @@ export function SeekBarPanel() {
                 }
                 update({ seekDotShape: s.id });
               }}
-              label={s.label}
-              sub={s.sub}
+              label={t(s.label)}
+              sub={t(s.sub)}
             />
           ))}
         </div>
       </SubField>
 
-      <SubField label={currentShape === "image" ? "Image size" : "Dot size"} value={`${dotVal}px`}>
+      <SubField label={currentShape === "image" ? t("Image size") : t("Dot size")} value={`${dotVal}px`}>
         <input
           type="range"
           min={8}
@@ -178,7 +180,7 @@ export function SeekBarPanel() {
         />
       </SubField>
 
-      <SubField label="Dot image">
+      <SubField label={t("Dot image")}>
         <SeekImageUpload
           value={settings.seekDotImage}
           onSelect={(url) => update({ seekDotImage: url, seekDotShape: "image" })}
@@ -188,8 +190,8 @@ export function SeekBarPanel() {
               seekDotShape: settings.seekDotShape === "image" ? "circle" : settings.seekDotShape,
             })
           }
-          emptyTitle="Upload nyan cat, a sticker, anything"
-          hint="PNG, JPEG, WebP, or SVG (auto-shrunk if huge). Animated GIFs up to 2 MB play live."
+          emptyTitle={t("Upload nyan cat, a sticker, anything")}
+          hint={t("PNG, JPEG, WebP, or SVG (auto-shrunk if huge). Animated GIFs up to 2 MB play live.")}
         />
       </SubField>
     </div>

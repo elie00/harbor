@@ -379,6 +379,7 @@ const SETTINGS_OPTIONS: SettingsOption[] = [
   { label: "Play button behavior", section: "player", anchorTitle: "Play button behavior", keywords: ["autoplay", "instant", "manual", "picker", "play mode"] },
   { label: "Stream format chips", section: "player", anchorTitle: "Stream format chips", keywords: ["chips", "badges", "4k", "hdr", "codec", "quality badge"] },
   { label: "Poster size", section: "player", anchorTitle: "Poster size", keywords: ["poster", "card", "size", "scale", "4k", "bigger"] },
+  { label: "Row title & player title size", section: "player", anchorTitle: "Title text", keywords: ["title", "text size", "row title", "player title", "bigger", "series first", "font size", "episode name", "header"] },
   { label: "Trailer quality", section: "player", anchorTitle: "Trailer quality", keywords: ["trailer", "quality", "youtube", "ytdl"] },
   { label: "Next episode prompt timing", section: "player", anchorTitle: "Next episode prompt", keywords: ["next episode", "up next", "autoplay", "pill", "credits"] },
   { label: "Downloads folder", section: "player", anchorTitle: "Downloads", keywords: ["download", "folder", "save", "directory"] },

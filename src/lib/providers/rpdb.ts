@@ -82,3 +82,9 @@ export function rpdbPoster(key: string, metaId: string, fallback?: string): stri
   if (key) return rpdbPath(posterBase, key, id) ?? fallback;
   return fallback;
 }
+
+export function needsImdbForPoster(key: string, metaId: string): boolean {
+  if (rpdbPoster(key, metaId)) return false;
+  if (!posterBase && !key) return false;
+  return /^tmdb:(movie|tv):\d+$/.test(metaId);
+}

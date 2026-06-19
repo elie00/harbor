@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { BackToTop } from "@/components/back-to-top";
 import { HeroCarousel, type Slide } from "@/components/hero-carousel";
 import { CollectionsRow } from "@/components/collections-row";
@@ -29,6 +29,7 @@ import { trackEvent } from "@/lib/discover";
 import { publishResumeStates } from "@/lib/hover-preview/store";
 import { readResumeEntry, saveResumeBatch } from "@/lib/resume";
 import { dismissCw, isCwDismissed, useCwDismissVersion } from "@/lib/cw-dismiss";
+import { clearLocalCw, listLocalCw, localCwVersion, subscribeLocalCw } from "@/lib/local-cw";
 import { repairLibraryNames } from "@/lib/stremio-repair";
 import {
   cwSortKey,
@@ -109,7 +110,7 @@ export function Home({ active = true }: { active?: boolean }) {
               ...r,
               metas: reachedCap ? combined.slice(0, MAX_PER_ROW) : combined,
               page: next,
-              hasMore: !reachedCap && more.length > 0,
+              hasMore: !reachedCap && fresh.length > 0,
             };
           }),
         );
@@ -331,8 +332,32 @@ export function Home({ active = true }: { active?: boolean }) {
     };
   }, [authKey, active]);
 
+  const localCwVer = useSyncExternalStore(subscribeLocalCw, localCwVersion);
   const continueWatching = useMemo(() => {
-    const eligible = [...items, ...simklCw]
+    const localCwItems: LibraryItem[] = listLocalCw().map((e) => ({
+      _id: e.id,
+      type: e.type,
+      name: e.name,
+      poster: e.poster,
+      background: e.background,
+      state: {
+        timeOffset: e.positionMs,
+        duration: e.durationMs,
+        season: e.season,
+        episode: e.episode,
+        video_id:
+          e.videoId ??
+          (e.season != null && e.episode != null ? `${e.id}:${e.season}:${e.episode}` : undefined),
+        flaggedWatched: e.durationMs > 0 && e.positionMs / e.durationMs >= 0.9 ? 1 : 0,
+        lastWatched: new Date(e.t).toISOString(),
+      },
+      removed: false,
+      temp: false,
+      _ctime: new Date(e.t).toISOString(),
+      _mtime: new Date(e.t).toISOString(),
+      local: true,
+    }));
+    const eligible = [...items, ...simklCw, ...localCwItems]
       .filter(
         (i) =>
           (i.type as string) !== "other" &&
@@ -361,14 +386,20 @@ export function Home({ active = true }: { active?: boolean }) {
       if (out.length >= 100) break;
     }
     return out;
-  }, [items, simklCw, cwVersion, settings.animeOnlyInAnimeRoom]);
+  }, [items, simklCw, localCwVer, cwVersion, settings.animeOnlyInAnimeRoom]);
   const cwItems = useCwAdvance(continueWatching, settings.tmdbKey, settings.cwAdvanceNext);
 
   useEffect(() => {
     publishResumeStates(cwItems);
   }, [cwItems]);
 
-  const onDismissCw = useCallback((item: LibraryItem) => dismissCw(item, authKey), [authKey]);
+  const onDismissCw = useCallback(
+    (item: LibraryItem) => {
+      if (item.local) clearLocalCw(item._id);
+      else dismissCw(item, authKey);
+    },
+    [authKey],
+  );
 
   const { items: favItems } = useMediaFavorites();
   const { items: localItems } = useLocalWatchlist();

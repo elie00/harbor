@@ -74,6 +74,28 @@ export function QualityPanel() {
       </Section>
 
       <Section
+        title={t("Title text")}
+        subtitle={t("Resize the row titles on Home and the title shown in the player, without scaling the rest of the interface. You can also lead the player title with the series name instead of the episode.")}
+      >
+        <SizeSlider
+          label={t("Row titles")}
+          value={settings.rowTitleScale}
+          onChange={(v) => update({ rowTitleScale: v })}
+        />
+        <SizeSlider
+          label={t("Player title")}
+          value={settings.playerTitleScale}
+          onChange={(v) => update({ playerTitleScale: v })}
+        />
+        <ToggleRow
+          label={t("Show series name first in the player")}
+          sub={t("Lead with the show name instead of the episode title at the top of the player.")}
+          value={settings.playerTitleSeriesFirst}
+          onChange={(v) => update({ playerTitleSeriesFirst: v })}
+        />
+      </Section>
+
+      <Section
         title={t("Accessibility")}
         subtitle={t("Make everything bigger and easier to read: sidebar, menus, popups, every page. The whole interface scales live as you drag, so you can see the change right here. Great on 4K and ultrawide monitors, or whenever the text feels small.")}
       >
@@ -187,6 +209,43 @@ export function QualityPanel() {
 
       <CustomCodeCard />
     </>
+  );
+}
+
+function SizeSlider({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+}) {
+  const t = useT();
+  return (
+    <div className="flex items-center gap-4 px-1 py-1.5">
+      <span className="w-32 shrink-0 text-[13.5px] font-medium text-ink">{label}</span>
+      <input
+        type="range"
+        min={0.8}
+        max={1.6}
+        step={0.05}
+        value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        className="h-1 flex-1 appearance-none rounded-full bg-edge-soft accent-ink"
+      />
+      <span className="w-14 shrink-0 text-end text-[13px] tabular-nums text-ink-muted">
+        {Math.round(value * 100)}%
+      </span>
+      {value !== 1 && (
+        <button
+          onClick={() => onChange(1)}
+          className="shrink-0 text-[12.5px] font-medium text-ink-subtle transition-colors hover:text-ink"
+        >
+          {t("Reset")}
+        </button>
+      )}
+    </div>
   );
 }
 

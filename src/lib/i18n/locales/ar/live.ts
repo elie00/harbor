@@ -190,6 +190,73 @@ const live: Record<string, string> = {
     "عرض {shown} من {total} فيلم. ابحث للعثور على البقية.",
   "Showing {shown} of {total} shows. Search to find the rest.":
     "عرض {shown} من {total} مسلسل. ابحث للعثور على البقية.",
+
+  "Provider returned a webpage, not a playlist": "أعاد المزوّد صفحة ويب وليس قائمة تشغيل",
+  "Credentials are likely expired or the subscription is inactive. Edit the playlist URL above, or contact your provider.":
+    "على الأرجح أن بيانات الاعتماد منتهية الصلاحية أو أن الاشتراك غير نشط. عدّل رابط قائمة التشغيل أعلاه، أو تواصل مع مزوّدك.",
+  "Account is not active": "الحساب غير نشط",
+  "This Xtream account is expired, banned, or disabled on the provider side. Renew or confirm with your provider.":
+    "حساب Xtream هذا منتهي الصلاحية أو محظور أو معطّل من جهة المزوّد. جدّده أو تأكّد من مزوّدك.",
+  "Xtream login was rejected": "تم رفض تسجيل الدخول إلى Xtream",
+  "The server URL, username, or password is wrong. Edit the playlist and re-check the credentials your provider sent.":
+    "رابط الخادم أو اسم المستخدم أو كلمة المرور غير صحيح. عدّل قائمة التشغيل وأعد التحقّق من بيانات الاعتماد التي أرسلها مزوّدك.",
+  "Provider did not return valid data": "لم يُعِد المزوّد بيانات صالحة",
+  "The server replied with a webpage instead of Xtream data. The account may be expired, or the server URL is not an Xtream panel.":
+    "ردّ الخادم بصفحة ويب بدلًا من بيانات Xtream. قد يكون الحساب منتهي الصلاحية، أو أن رابط الخادم ليس لوحة Xtream.",
+  "Bad username or password": "اسم المستخدم أو كلمة المرور غير صحيح",
+  "The credentials in the URL are wrong. Edit the playlist and double check the username and password against what your provider sent.":
+    "بيانات الاعتماد في الرابط غير صحيحة. عدّل قائمة التشغيل وتحقّق من اسم المستخدم وكلمة المرور مقابل ما أرسله مزوّدك.",
+  "Provider blocked the request": "حظر المزوّد الطلب",
+  "Your IP or device is blocked. Some providers geo restrict or limit how many devices can connect at once.":
+    "تم حظر عنوان IP أو جهازك. بعض المزوّدين يقيّدون حسب الموقع الجغرافي أو يحدّون من عدد الأجهزة التي يمكنها الاتصال في آنٍ واحد.",
+  "Playlist URL not found": "تعذّر العثور على رابط قائمة التشغيل",
+  "The server responded but the playlist is not at that URL. Check for typos and verify with your provider.":
+    "استجاب الخادم لكن قائمة التشغيل ليست على هذا الرابط. تحقّق من الأخطاء المطبعية وتأكّد من مزوّدك.",
+  "Provider is rate limiting": "المزوّد يحدّ من المعدّل",
+  "Too many requests from your IP. Wait a minute and try again.":
+    "طلبات كثيرة جدًا من عنوان IP الخاص بك. انتظر دقيقة ثم حاول مرة أخرى.",
+  "Provider refused service": "رفض المزوّد الخدمة",
+  "Most common cause: this account is at its max simultaneous connections. Close other devices and players using these credentials.":
+    "السبب الأكثر شيوعًا: بلغ هذا الحساب الحد الأقصى للاتصالات المتزامنة. أغلق الأجهزة والمشغّلات الأخرى التي تستخدم بيانات الاعتماد هذه.",
+  "Server did not respond": "لم يستجب الخادم",
+  "The playlist server is down or your network is blocking it. Try again in a few minutes.":
+    "خادم قائمة التشغيل متوقّف أو أن شبكتك تحجبه. حاول مرة أخرى بعد بضع دقائق.",
+  "Could not resolve hostname": "تعذّر تحليل اسم المضيف",
+  "The URL hostname is wrong or no longer exists. Many providers rotate domains; ask your provider for an updated playlist URL.":
+    "اسم مضيف الرابط غير صحيح أو لم يعد موجودًا. يبدّل كثير من المزوّدين النطاقات؛ اطلب من مزوّدك رابط قائمة تشغيل محدّثًا.",
+  "Connection refused": "تم رفض الاتصال",
+  "The playlist server actively refused the connection.": "رفض خادم قائمة التشغيل الاتصال بشكل صريح.",
+  "Connection reset by server": "أعاد الخادم تعيين الاتصال",
+  "The server rejected the request. Some providers block generic clients; verify the credentials work in their official app first.":
+    "رفض الخادم الطلب. يحجب بعض المزوّدين العملاء العامّين؛ تأكّد أولًا من أن بيانات الاعتماد تعمل في تطبيقهم الرسمي.",
+  "Could not reach playlist server": "تعذّر الوصول إلى خادم قائمة التشغيل",
+  "The host did not respond. The URL may have expired (many providers rotate domains), the server is down, or your network is blocking it. Contact your provider for an updated URL.":
+    "لم يستجب المضيف. قد يكون الرابط منتهي الصلاحية (يبدّل كثير من المزوّدين النطاقات)، أو الخادم متوقّف، أو أن شبكتك تحجبه. تواصل مع مزوّدك للحصول على رابط محدّث.",
+  "Server returned an empty response": "أعاد الخادم استجابة فارغة",
+  "The server is reachable but is not sending any data. Check the URL or contact your provider.":
+    "يمكن الوصول إلى الخادم لكنه لا يرسل أي بيانات. تحقّق من الرابط أو تواصل مع مزوّدك.",
+  "Playlist contained no channels": "لا تحتوي قائمة التشغيل على أي قنوات",
+  "The URL is valid but the playlist is empty. The provider may be in maintenance, or the URL is misconfigured.":
+    "الرابط صالح لكن قائمة التشغيل فارغة. قد يكون المزوّد في وضع الصيانة، أو أن الرابط غير مُهيّأ بشكل صحيح.",
+  "Playlist is too large": "قائمة التشغيل كبيرة جدًا",
+  "Harbor caps playlists at 80 MB to stay responsive. Most providers offer a filtered URL with fewer channels.":
+    "يحدّ Harbor حجم قوائم التشغيل بـ 80 ميغابايت للحفاظ على الاستجابة. يوفّر معظم المزوّدين رابطًا مُصفّى بعدد أقل من القنوات.",
+  "Could not load this playlist": "تعذّر تحميل قائمة التشغيل هذه",
+  "Heads up: most IPTV providers cap how many streams an account can run at the same time. If other devices or players are using these credentials, close them and try again.":
+    "تنبيه: يحدّ معظم مزوّدي IPTV عدد التدفّقات التي يمكن للحساب تشغيلها في آنٍ واحد. إذا كانت أجهزة أو مشغّلات أخرى تستخدم بيانات الاعتماد هذه، فأغلقها ثم حاول مرة أخرى.",
+
+  WIN: "فائز",
+  TBD: "يُحدَّد لاحقًا",
+
+  "Broadcast networks": "شبكات البثّ",
+  News: "الأخبار",
+  "Premium movies": "أفلام مميّزة",
+  Entertainment: "ترفيه",
+  "Lifestyle & Reality": "أسلوب الحياة والواقع",
+  "Documentary & Discovery": "الوثائقيات والاكتشاف",
+  Broadcast: "البثّ",
+  "Rede aberta": "القنوات المفتوحة",
+  Esportes: "الرياضة",
 };
 
 export default live;

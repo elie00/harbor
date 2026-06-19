@@ -83,6 +83,7 @@ export type Frame =
   | { kind: "downloads" }
   | { kind: "service"; service: StreamingService }
   | { kind: "meta"; meta: Meta; liveContext?: boolean; episodeHint?: { season: number; episode: number } }
+  | { kind: "episode-detail"; seriesId: string; season: number; episode: number; seriesMeta?: Meta }
   | { kind: "person"; id: number }
   | { kind: "collection"; id: number }
   | { kind: "collections" }
@@ -90,7 +91,7 @@ export type Frame =
   | { kind: "grid"; grid: GridSpec }
   | { kind: "award"; awardType: import("./providers/wikidata").AwardType }
   | { kind: "anime-award"; sourceId: import("./anime-awards").AwardSourceId }
-  | { kind: "picker"; meta: Meta; episode?: PlayEpisode; autoPlay?: boolean; attempt?: number; intent?: "play" | "download" }
+  | { kind: "picker"; meta: Meta; episode?: PlayEpisode; autoPlay?: boolean; attempt?: number; intent?: "play" | "download"; resume?: boolean }
   | { kind: "player"; src: PlayerSrc };
 
 export type ScrollSnapshot = {
@@ -123,6 +124,8 @@ type ViewValue = {
   metaLiveContext: boolean;
   metaEpisodeHint: { season: number; episode: number } | null;
   openMeta: (m: Meta | null, opts?: { liveContext?: boolean; episodeHint?: { season: number; episode: number } }) => void;
+  episodeDetail: { seriesId: string; season: number; episode: number; seriesMeta?: Meta } | null;
+  openEpisodeDetail: (seriesId: string, season: number, episode: number, seriesMeta?: Meta) => void;
   promoteMetaToRoot: () => void;
   personId: number | null;
   openPerson: (id: number | null) => void;
@@ -140,11 +143,11 @@ type ViewValue = {
   animeAwardSource: import("./anime-awards").AwardSourceId | null;
   openAnimeAward: (s: import("./anime-awards").AwardSourceId) => void;
   homeResetTick: number;
-  picker: { meta: Meta; episode?: PlayEpisode; autoPlay?: boolean; attempt?: number; intent?: "play" | "download" } | null;
+  picker: { meta: Meta; episode?: PlayEpisode; autoPlay?: boolean; attempt?: number; intent?: "play" | "download"; resume?: boolean } | null;
   openPicker: (
     meta: Meta,
     episode?: PlayEpisode,
-    opts?: { autoPlay?: boolean; attempt?: number; intent?: "play" | "download" },
+    opts?: { autoPlay?: boolean; attempt?: number; intent?: "play" | "download"; resume?: boolean },
   ) => void;
   player: PlayerSrc | null;
   openPlayer: (src: PlayerSrc) => void;
@@ -212,6 +215,8 @@ function frameKey(f: Frame): string {
       return `service:${f.service}`;
     case "meta":
       return `meta:${f.meta.id}`;
+    case "episode-detail":
+      return `episode-detail:${f.seriesId}:${f.season}:${f.episode}`;
     case "person":
       return `person:${f.id}`;
     case "collection":
@@ -312,12 +317,25 @@ export function ViewProvider({ children }: { children: ReactNode }) {
     metaFrame && metaFrame.kind === "meta" ? metaFrame.episodeHint ?? null : null;
   const personId = top.kind === "person" ? top.id : null;
   const collectionId = top.kind === "collection" ? top.id : null;
+  const episodeDetail = useMemo(
+    () =>
+      top.kind === "episode-detail"
+        ? { seriesId: top.seriesId, season: top.season, episode: top.episode, seriesMeta: top.seriesMeta }
+        : null,
+    [
+      top.kind,
+      top.kind === "episode-detail" ? top.seriesId : "",
+      top.kind === "episode-detail" ? top.season : 0,
+      top.kind === "episode-detail" ? top.episode : 0,
+      top.kind === "episode-detail" && top.seriesMeta ? top.seriesMeta.id : "",
+    ],
+  );
   const filter = top.kind === "filter" ? top.filter : null;
   const grid = top.kind === "grid" ? top.grid : null;
   const awardType = top.kind === "award" ? top.awardType : null;
   const picker =
     top.kind === "picker"
-      ? { meta: top.meta, episode: top.episode, autoPlay: top.autoPlay, attempt: top.attempt, intent: top.intent }
+      ? { meta: top.meta, episode: top.episode, autoPlay: top.autoPlay, attempt: top.attempt, intent: top.intent, resume: top.resume }
       : null;
   const player = top.kind === "player" ? top.src : null;
   const canGoBack = stack.length > 1;
@@ -528,6 +546,24 @@ export function ViewProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const openEpisodeDetail = useCallback(
+    (seriesId: string, season: number, episode: number, seriesMeta?: Meta) => {
+      setStack((cur) => {
+        const t = cur[cur.length - 1];
+        if (
+          t.kind === "episode-detail" &&
+          t.seriesId === seriesId &&
+          t.season === season &&
+          t.episode === episode
+        ) {
+          return cur;
+        }
+        return pushFrame(cur, { kind: "episode-detail", seriesId, season, episode, seriesMeta });
+      });
+    },
+    [],
+  );
+
   const openAward = useCallback((t: import("./providers/wikidata").AwardType) => {
     setStack((cur) => {
       const top = cur[cur.length - 1];
@@ -576,7 +612,7 @@ export function ViewProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const openPicker = useCallback(
-    (m: Meta, ep?: PlayEpisode, opts?: { autoPlay?: boolean; attempt?: number; intent?: "play" | "download" }) => {
+    (m: Meta, ep?: PlayEpisode, opts?: { autoPlay?: boolean; attempt?: number; intent?: "play" | "download"; resume?: boolean }) => {
       setStack((cur) => {
         const t = cur[cur.length - 1];
         if (
@@ -594,6 +630,7 @@ export function ViewProvider({ children }: { children: ReactNode }) {
           autoPlay: opts?.autoPlay,
           attempt: opts?.attempt,
           intent: opts?.intent,
+          resume: opts?.resume,
         });
       });
     },
@@ -667,6 +704,8 @@ export function ViewProvider({ children }: { children: ReactNode }) {
       openPerson,
       collectionId,
       openCollection,
+      episodeDetail,
+      openEpisodeDetail,
       openQueue,
       filter,
       openFilter,
@@ -713,6 +752,8 @@ export function ViewProvider({ children }: { children: ReactNode }) {
       personId,
       collectionId,
       openCollection,
+      episodeDetail,
+      openEpisodeDetail,
       filter,
       stackKinds,
       awardType,

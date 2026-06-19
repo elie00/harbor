@@ -3,8 +3,12 @@ import { useT, useUiLanguage } from "@/lib/i18n";
 import type { SportsGame, SportsSide } from "@/lib/sports/espn";
 import { fmtClock } from "../now-format";
 
-function startLabel(ms: number, locale: string): string {
-  if (!ms || isNaN(ms)) return "TBD";
+function startLabel(
+  ms: number,
+  locale: string,
+  t: (key: string, vars?: Record<string, string | number>) => string,
+): string {
+  if (!ms || isNaN(ms)) return t("TBD");
   const d = new Date(ms);
   const now = new Date();
   const time = fmtClock(ms);
@@ -38,6 +42,7 @@ export function SportsCard({ game, onSelect }: { game: SportsGame; onSelect: (g:
 }
 
 function SideRow({ side, active, dim, showWinner }: { side: SportsSide; active: boolean; dim: boolean; showWinner?: boolean }) {
+  const t = useT();
   const [err, setErr] = useState(false);
   const hasScore = side.score && side.score !== "" && side.score !== "0";
   const isPositionScore = hasScore && /^\d+(st|nd|rd|th)$/.test(side.score);
@@ -61,7 +66,7 @@ function SideRow({ side, active, dim, showWinner }: { side: SportsSide; active: 
       </span>
       {showWinner && side.winner && !hasScore ? (
         <span className="flex h-5 items-center rounded bg-success/20 px-2 text-[10px] font-bold uppercase tracking-wider text-success">
-          WIN
+          {t("WIN")}
         </span>
       ) : (
         <span
@@ -98,7 +103,7 @@ function Status({ game }: { game: SportsGame }) {
     );
   }
 
-  const label = game.startMs ? startLabel(game.startMs, locale) : (game.detail || t("Upcoming"));
+  const label = game.startMs ? startLabel(game.startMs, locale, t) : (game.detail || t("Upcoming"));
 
   return (
     <span className="flex h-[18px] items-center gap-1.5 rounded border border-edge-soft/60 px-1.5 text-[10.5px] font-semibold uppercase tracking-[0.06em] text-ink-subtle">

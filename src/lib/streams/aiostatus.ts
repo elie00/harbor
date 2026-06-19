@@ -71,25 +71,37 @@ export async function fetchAioStatusHealth(
   dlog(`[aiostatus] found: ${status.manifest.name}`);
   const base = status.transportUrl.replace(/\/manifest\.json$/, "");
 
-  const catalogUrl = `${base}/catalog/other/debridstatus_catalog.json`;
-  let catalog: CatalogMeta[] = [];
-  try {
-    const res = await fetch(catalogUrl, { signal });
-    if (res.ok) {
-      const json = (await res.json()) as { metas?: CatalogMeta[] };
-      catalog = json.metas ?? [];
-    }
-  } catch (e) {
-    dwarn(`[aiostatus] catalog fetch failed: ${e instanceof Error ? e.message : e}`);
-  }
-  dlog(`[aiostatus] catalog has ${catalog.length} services`);
+  const catalogDefs =
+    status.manifest.catalogs && status.manifest.catalogs.length > 0
+      ? status.manifest.catalogs.filter((c) => !c.extra?.some((e) => e.isRequired))
+      : [{ id: "debridstatus_catalog", type: "other", name: "Status" }];
+
+  const seen = new Set<string>();
+  const metas: Array<CatalogMeta & { resType: string }> = [];
+  await Promise.all(
+    catalogDefs.map(async (def) => {
+      const catalogUrl = `${base}/catalog/${encodeURIComponent(def.type)}/${encodeURIComponent(def.id)}.json`;
+      try {
+        const res = await fetch(catalogUrl, { signal });
+        if (!res.ok) return;
+        const json = (await res.json()) as { metas?: CatalogMeta[] };
+        for (const meta of json.metas ?? []) {
+          if (!meta.id || seen.has(meta.id)) continue;
+          seen.add(meta.id);
+          metas.push({ ...meta, resType: def.type });
+        }
+      } catch (e) {
+        dwarn(`[aiostatus] catalog ${def.id} fetch failed: ${e instanceof Error ? e.message : e}`);
+      }
+    }),
+  );
+  dlog(`[aiostatus] ${catalogDefs.length} catalogs -> ${metas.length} services`);
 
   const health = new Map<DebridSlug, ServiceHealth>();
   const services: AioService[] = [];
   await Promise.all(
-    catalog.map(async (meta) => {
-      if (!meta.id.startsWith("ds:")) return;
-      const url = `${base}/stream/other/${encodeURIComponent(meta.id)}.json`;
+    metas.map(async (meta) => {
+      const url = `${base}/stream/${encodeURIComponent(meta.resType)}/${encodeURIComponent(meta.id)}.json`;
       try {
         const res = await fetch(url, { signal });
         if (!res.ok) return;
@@ -99,7 +111,7 @@ export async function fetchAioStatusHealth(
         const parsed = parseStatus(stream);
         services.push({
           id: meta.id,
-          name: meta.name?.trim() || meta.id.slice(3),
+          name: meta.name?.trim() || cleanServiceId(meta.id),
           poster: meta.poster ?? null,
           ...parsed,
         });
@@ -141,8 +153,12 @@ export async function fetchAioStatusHealth(
 }
 
 function mapDsServiceId(id: string): DebridSlug | null {
-  const tail = id.slice(3).toLowerCase();
+  const tail = (id.startsWith("ds:") ? id.slice(3) : id).toLowerCase();
   return SERVICE_NAME_TO_SLUG[tail] ?? null;
+}
+
+function cleanServiceId(id: string): string {
+  return id.replace(/^[a-z]+:/i, "");
 }
 
 function parseStatus(stream: StatusStream): {

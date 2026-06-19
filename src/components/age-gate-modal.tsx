@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import piratePeek from "@/assets/piratepeek.svg";
-import { useT } from "@/lib/i18n";
+import { useT, useUiLanguage } from "@/lib/i18n";
 
 type Question = {
   q: string;
@@ -252,14 +251,97 @@ const QUESTION_BANK: Question[] = [
   },
 ];
 
-function pickThree(seed: number): Question[] {
-  const indices = [...QUESTION_BANK.keys()];
+const AR_QUESTION_BANK: Question[] = [
+  {
+    q: "عند استئجار شقة، يُدفع \"مبلغ التأمين\" عادةً من أجل:",
+    options: [
+      "دفع إيجار الشهر الأخير مقدمًا",
+      "ضريبة تسجيل العقار",
+      "تغطية أي ضرر عند مغادرتك",
+      "عمولة لمكتب العقارات",
+    ],
+    correct: 2,
+  },
+  {
+    q: "\"صافي الراتب\" يعني:",
+    options: [
+      "الأجر بالساعة",
+      "ما يصل إلى حسابك بعد الخصومات",
+      "قيمة المكافأة فقط",
+      "نفس قيمة الراتب الإجمالي",
+    ],
+    correct: 1,
+  },
+  {
+    q: "\"الكفيل\" في القرض يوافق على:",
+    options: [
+      "اقتسام المبلغ بالتساوي",
+      "السداد إذا تعثّر المقترض",
+      "الشهادة على العقد فقط",
+      "تقاضي فائدة من المقترض",
+    ],
+    correct: 1,
+  },
+  {
+    q: "الشراء \"بالتقسيط\" يعني أنك:",
+    options: [
+      "تدفع رسمًا لمرة واحدة للحجز",
+      "تدفع المبلغ على دفعات أصغر مع الوقت",
+      "تحصل على خصم عند الدفع المبكر",
+      "تستأجره ثم تعيده لاحقًا",
+    ],
+    correct: 1,
+  },
+  {
+    q: "\"التضخم\" في الاقتصاد يعني:",
+    options: [
+      "تراجع الناتج المحلي",
+      "ارتفاع الأسعار بشكل عام",
+      "ازدياد قوة العملة",
+      "ارتفاع معدّل البطالة",
+    ],
+    correct: 1,
+  },
+  {
+    q: "عند تقديم \"الاستقالة\"، فأنت:",
+    options: [
+      "تطلب إجازة لمدة أسبوعين",
+      "تُبلغ جهة عملك بأنك ستترك الوظيفة",
+      "تبدأ فترة تجربة جديدة",
+      "تطلب زيادة في الراتب",
+    ],
+    correct: 1,
+  },
+  {
+    q: "\"الفائدة المركبة\" تُحسب على:",
+    options: [
+      "المبلغ الأصلي فقط",
+      "المبلغ الأصلي مع الفوائد المتراكمة",
+      "مبلغ ثابت كل شهر",
+      "ما يتبقّى في نهاية العام",
+    ],
+    correct: 1,
+  },
+  {
+    q: "أن يكون حسابك البنكي \"مكشوفًا\" يعني:",
+    options: [
+      "أنك تجاوزت سقف الادخار",
+      "أنك أنفقت أكثر من رصيدك",
+      "أن البنك جمّد الحساب",
+      "أنك ربحت فائدة فوق الحد",
+    ],
+    correct: 1,
+  },
+];
+
+function pickThree(seed: number, bank: Question[]): Question[] {
+  const indices = [...bank.keys()];
   for (let i = indices.length - 1; i > 0; i--) {
     seed = (seed * 9301 + 49297) % 233280;
     const j = Math.floor((seed / 233280) * (i + 1));
     [indices[i], indices[j]] = [indices[j], indices[i]];
   }
-  return indices.slice(0, 3).map((i) => QUESTION_BANK[i]);
+  return indices.slice(0, 3).map((i) => bank[i]);
 }
 
 export function AgeGateModal({
@@ -272,8 +354,12 @@ export function AgeGateModal({
   onPass: () => void;
 }) {
   const t = useT();
+  const isAr = useUiLanguage() === "ar";
   const [seed, setSeed] = useState(() => Date.now() % 1_000_000);
-  const questions = useMemo(() => pickThree(seed), [seed]);
+  const questions = useMemo(
+    () => pickThree(seed, isAr ? AR_QUESTION_BANK : QUESTION_BANK),
+    [seed, isAr],
+  );
   const [picks, setPicks] = useState<(number | null)[]>([null, null, null]);
   const [submitted, setSubmitted] = useState(false);
   const [verified, setVerified] = useState(false);
@@ -326,21 +412,14 @@ export function AgeGateModal({
         <VerifiedSplash />
       ) : (
       <div className="relative w-full max-w-xl animate-modal-in">
-        <img
-          src={piratePeek}
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute end-[44px] top-0 z-10 h-[150px] w-auto translate-x-1/2 rtl:-translate-x-1/2 select-none drop-shadow-[0_16px_28px_rgba(0,0,0,0.55)] animate-pirate-peek"
-          draggable={false}
-        />
       <div className="flex max-h-[90vh] w-full flex-col overflow-hidden rounded-3xl border border-edge bg-canvas shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
         <header className="relative shrink-0 overflow-hidden border-b border-edge-soft bg-gradient-to-b from-elevated/35 to-canvas px-7 py-6">
           <div className="relative flex flex-col gap-1.5">
             <h2 className="font-display text-[28px] font-medium leading-tight tracking-tight text-ink">
-              {t("Holdup Matey!")}
+              {t("Quick age check")}
             </h2>
             <p className="text-[14px] leading-relaxed text-ink-muted">
-              {t("We need to check your age before you sail ahead. Three quick questions a working adult would know in their sleep. Get them all right and the adult shelf opens.")}
+              {t("A quick age check before adult add-ons unlock. Answer three everyday questions any adult would know, and you're in.")}
             </p>
           </div>
         </header>
@@ -401,7 +480,7 @@ export function AgeGateModal({
               onClick={onClose}
               className="rounded-full border border-edge-soft px-5 py-2 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-edge hover:text-ink"
             >
-              {t("Nevermind")}
+              {t("Cancel")}
             </button>
             <button
               onClick={handleSubmit}
@@ -412,7 +491,7 @@ export function AgeGateModal({
                   : "cursor-not-allowed bg-edge text-ink-subtle"
               }`}
             >
-              {t("Set sail")}
+              {t("Continue")}
             </button>
           </div>
           {submitted && !allCorrect && (
@@ -457,7 +536,7 @@ function VerifiedSplash() {
         </svg>
       </div>
       <p className="font-display text-[26px] font-medium leading-tight tracking-tight text-ink">
-        {t("Welcome aboard")}
+        {t("You're verified")}
       </p>
     </div>
   );

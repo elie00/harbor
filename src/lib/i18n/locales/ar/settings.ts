@@ -541,6 +541,464 @@ const settings: Record<string, string> = {
   "Show this panel": "إظهار هذه اللوحة",
   "Hide this panel": "إخفاء هذه اللوحة",
   Host: "المضيف",
+
+  Save: "حفظ",
+  Saved: "تم الحفظ",
+  Active: "نشط",
+  Hide: "إخفاء",
+  Show: "إظهار",
+  Clear: "مسح",
+  "No matches": "لا توجد نتائج",
+  "Sign in": "تسجيل الدخول",
+  "Sign out": "تسجيل الخروج",
+  "Reset to default": "الإعادة إلى الافتراضي",
+
+  Instant: "فوري",
+  "Manual picker": "أداة الاختيار اليدوية",
+  Recommended: "موصى به",
+  "Hitting Play jumps straight into playback with the best stream Harbor finds.":
+    "يقفز الضغط على تشغيل مباشرةً إلى التشغيل بأفضل بثٍّ يجده Harbor.",
+  "Hitting Play opens the source list so you can choose quality, debrid, and audio yourself.":
+    "يفتح الضغط على تشغيل قائمة المصادر لتختار الجودة وDebrid والصوت بنفسك.",
+  "Remember last stream": "تذكّر آخر بثّ",
+  "When you resume something you were watching, replay the exact stream you last used (same addon and source) instead of opening the picker again. Turn off to always choose fresh.":
+    "عند استئنافك لشيء كنت تشاهده، أعد تشغيل البثّ نفسه الذي استخدمته آخر مرة (نفس الإضافة والمصدر) بدلًا من فتح الأداة من جديد. عطّله لتختار جديدًا دائمًا.",
+
+  "mpv on the desktop app, HTML5 in the browser. The right engine without thinking about it.":
+    "mpv في تطبيق سطح المكتب، وHTML5 في المتصفّح. المحرك المناسب دون تفكير.",
+  "Native webview playback. Smooth and integrated, but limited codec coverage.":
+    "تشغيل أصلي عبر webview. سلس ومتكامل، لكن تغطية الترميز محدودة.",
+  "Bundled with Harbor. Plays anything you throw at it.":
+    "مُضمّن مع Harbor. يشغّل أي شيء تعطيه إياه.",
+  "Embed mpv inside Harbor window": "تضمين mpv داخل نافذة Harbor",
+  "Renders mpv inline so playback lives in Harbor itself. Disable to open it in a separate window instead.":
+    "يعرض mpv داخليًا ليكون التشغيل في Harbor نفسه. عطّله لفتحه في نافذة منفصلة بدلًا من ذلك.",
+  "HDR-to-SDR tonemapping": "تحويل ألوان HDR إلى SDR",
+  "Maps HDR sources to SDR using bt.2446a. Recommended on SDR displays.":
+    "يحوّل مصادر HDR إلى SDR باستخدام bt.2446a. موصى به على شاشات SDR.",
+  "HDR in a separate window": "HDR في نافذة منفصلة",
+  "Plays HDR content in its own window so Windows treats it as true HDR (the SDR brightness slider stops dimming it). Turn off HDR-to-SDR tonemapping above to use this on an HDR display.":
+    "يشغّل محتوى HDR في نافذته الخاصة ليعامله Windows كـ HDR حقيقي (يتوقّف شريط سطوع SDR عن تعتيمه). عطّل تحويل ألوان HDR إلى SDR أعلاه لاستخدام هذا على شاشة HDR.",
+  "HDR display mode": "وضع عرض HDR",
+  "Keeps Harbor embedded but lifts the HDR video onto its own opaque plane with the controls floating above, so Windows shows true HDR without the brightness slider dimming it. Needs HDR-to-SDR tonemapping off.":
+    "يبقي Harbor مضمّنًا لكنه يرفع فيديو HDR إلى مستواه المعتم الخاص مع طفو عناصر التحكّم فوقه، ليعرض Windows HDR حقيقيًا دون أن يعتّمه شريط السطوع. يتطلب إيقاف تحويل ألوان HDR إلى SDR.",
+  Always: "دائمًا",
+  "Line-free video mode": "وضع فيديو بلا خطوط",
+  "Forces a compatibility present mode that removes a thin bright line some monitors show at the screen edge. Side effects: 4K playback can drop to a slideshow and HDR content looks dimmer (this mode bypasses the HDR display path). Leave OFF unless you see that line. Restart playback to apply.":
+    "يفرض وضع عرض متوافق يزيل خطًا ساطعًا رفيعًا تُظهره بعض الشاشات عند حافة الشاشة. آثار جانبية: قد يتحول تشغيل 4K إلى عرض شرائح ويبدو محتوى HDR أكثر تعتيمًا (يتجاوز هذا الوضع مسار عرض HDR). اتركه معطّلًا ما لم ترَ ذلك الخط. أعد تشغيل التشغيل للتطبيق.",
+  "Motion smoothing": "تنعيم الحركة",
+  "Interpolates frames for smoother panning, best on anime. Needs a display refresh rate above the video's frame rate, and can stutter on weak GPUs. mpv only.":
+    "يستوفي الإطارات لتحريك أنعم، أفضل في الأنمي. يتطلب معدّل تحديث شاشة أعلى من معدّل إطارات الفيديو، وقد يتقطّع على بطاقات الرسوم الضعيفة. mpv فقط.",
+  "Direct torrent streaming": "بثّ التورنت المباشر",
+  "When you have no debrid set up, or a torrent isn't cached, stream it straight from the bundled engine on localhost:11470. This connects to peers over your own connection, the same way Stremio's built-in streaming does.":
+    "عندما لا يكون لديك Debrid معدّ، أو لا يكون التورنت مخزّنًا، ابثّه مباشرةً من المحرك المضمّن على localhost:11470. يتصل هذا بالأقران عبر اتصالك الخاص، تمامًا كما يفعل بثّ Stremio المدمج.",
+  "Use Harbor's built-in engine (beta)": "استخدام محرك Harbor المدمج (تجريبي)",
+  "Stream torrents through Harbor's own Rust peer-to-peer engine instead of the bundled Stremio Server. Falls back automatically if it can't connect. Status and a self-test live in the Local engine card below.":
+    "ابثّ التورنت عبر محرك Harbor الخاص بلغة Rust للنظير إلى النظير بدلًا من خادم Stremio المضمّن. يرجع تلقائيًا إن تعذّر الاتصال. الحالة واختبار ذاتي موجودان في بطاقة المحرك المحلي أدناه.",
+  "Always re-encode when casting (recommended)": "إعادة الترميز دائمًا عند البثّ (موصى به)",
+  "On by default. Pipes every cast through ffmpeg as H.264 + AAC + MPEG-TS so Samsung, LG, Sony, and other DLNA TVs accept the stream regardless of source codec. Turn off only if you have a beefy receiver that handles raw HEVC/DTS and want max quality. Requires ffmpeg in PATH.":
+    "مفعّل افتراضيًا. يمرّر كل بثّ عبر ffmpeg كـ H.264 + AAC + MPEG-TS لتقبل تلفزيونات Samsung وLG وSony وغيرها من تلفزيونات DLNA البثّ بغض النظر عن ترميز المصدر. عطّله فقط إن كان لديك مستقبِل قوي يتعامل مع HEVC/DTS الخام وتريد أقصى جودة. يتطلب ffmpeg في PATH.",
+  "Sharper lines and cleaner gradients on anime, in real time. One-tap setup below.":
+    "خطوط أحدّ وتدرّجات أنظف على الأنمي، في الوقت الفعلي. إعداد بنقرة واحدة أدناه.",
+  "Disabled while strict remote streaming is on": "معطّل أثناء تفعيل البثّ البعيد الصارم",
+
+  "Custom location": "موقع مخصّص",
+  "System default": "افتراضي النظام",
+  "Detecting...": "جارٍ الكشف...",
+  Open: "فتح",
+  "Choose folder": "اختيار مجلد",
+
+  "Drop shadow": "ظلّ مُسقط",
+  "Soft halo around the text. Cleanest on most content.":
+    "هالة ناعمة حول النص. الأنظف على معظم المحتوى.",
+  Outline: "حدّ خارجي",
+  "Hard stroke around each letter. High contrast.":
+    "خطّ صلب حول كل حرف. تباين عالٍ.",
+  "Black bar": "شريط أسود",
+  "Rounded background panel behind the text. Most readable.":
+    "لوحة خلفية مدوّرة خلف النص. الأكثر قابلية للقراءة.",
+  Left: "يسار",
+  Center: "وسط",
+  Right: "يمين",
+  "Keep original": "إبقاء الأصل",
+  "Styled (ASS) subs keep their own fonts, colors, and effects. Truest to the release.":
+    "تحتفظ الترجمات المنسّقة (ASS) بخطوطها وألوانها وتأثيراتها. الأقرب إلى الإصدار.",
+  "Resize only": "تغيير الحجم فقط",
+  "Keep the original look but apply your size and position.":
+    "أبقِ المظهر الأصلي لكن طبّق حجمك وموضعك.",
+  "Use my style": "استخدام نمطي",
+  "Force your font, size, and color onto styled subs. Use this for Arabic or any subs showing boxes. Can affect karaoke and signs.":
+    "افرض خطّك وحجمك ولونك على الترجمات المنسّقة. استخدم هذا للعربية أو أي ترجمات تظهر مربّعات. قد يؤثّر في الكاريوكي واللافتات.",
+  "Styled (ASS) subtitles": "الترجمات المنسّقة (ASS)",
+  "Seeing empty boxes instead of letters? Choose Arabic under Font and switch to Use my style.":
+    "ترى مربّعات فارغة بدل الحروف؟ اختر العربية تحت الخط وبدّل إلى استخدام نمطي.",
+  "Background opacity": "عتامة الخلفية",
+  "Outline thickness": "سُمك الحدّ الخارجي",
+  "Bold text": "نص عريض",
+  "Render subtitles in a heavier weight. Turn off to use your font's normal weight.":
+    "اعرض الترجمات بوزن أثقل. عطّله لاستخدام الوزن العادي لخطّك.",
+  "Show subtitles in Picture-in-Picture": "إظهار الترجمات في صورة داخل صورة",
+  "Hide subtitles when the player shrinks into the floating PiP window.":
+    "إخفاء الترجمات عندما يتقلّص المشغّل إلى نافذة صورة داخل صورة العائمة.",
+  Opacity: "العتامة",
+  "Distance from bottom": "المسافة من الأسفل",
+  Alignment: "المحاذاة",
+  "Text color": "لون النص",
+  "Outline color": "لون الحدّ الخارجي",
+  "Box color": "لون المربّع",
+  Reset: "إعادة التعيين",
+  "Reset to defaults": "إعادة التعيين إلى الافتراضيات",
+  Font: "الخط",
+  Rounded: "مدوّر",
+  Serif: "مذيّل",
+  Arabic: "عربي",
+  "{n} custom": "{n} مخصّص",
+  "Remove {name}": "إزالة {name}",
+  "Upload font": "رفع خط",
+  "Delete this font?": "حذف هذا الخط؟",
+  "will be removed from Harbor. Anything you've set to use it will fall back to Inter.":
+    "سيُزال من Harbor. وأي شيء ضبطته لاستخدامه سيرجع إلى Inter.",
+  Cancel: "إلغاء",
+  Delete: "حذف",
+
+  "Show thumbnail preview on hover": "إظهار معاينة مصغّرة عند التمرير",
+  "Generates a frame on the fly as you scrub the seek bar. Works on debrid streams and local files.":
+    "يولّد إطارًا فوريًا أثناء سحبك لشريط التقديم. يعمل على بثوث Debrid والملفات المحلية.",
+  "Bar style": "نمط الشريط",
+  "Solid fill, no texture. Cleanest baseline.":
+    "تعبئة صلبة بلا ملمس. الأساس الأنظف.",
+  Glass: "زجاج",
+  "Subtle Apple-like sheen on the filled portion.":
+    "لمعان خفيف يشبه Apple على الجزء المملوء.",
+  Pinstripe: "خطوط رفيعة",
+  "Diagonal stripes across the fill, retro vibe.":
+    "خطوط قطرية عبر التعبئة، بطابع كلاسيكي.",
+  Rainbow: "قوس قزح",
+  "Six horizontal stripes. Pairs with nyan cat dot.":
+    "ستة خطوط أفقية. تتناسب مع نقطة قطة نيان.",
+  "Image bar active. Pick a style above to switch back, or clear the image below.":
+    "شريط الصورة مفعّل. اختر نمطًا أعلاه للعودة، أو امسح الصورة أدناه.",
+  "Bar height": "ارتفاع الشريط",
+  "Bar color": "لون الشريط",
+  "Default (gold accent)": "افتراضي (تمييز ذهبي)",
+  "Bar image": "صورة الشريط",
+  "Upload a pattern to tile across the bar": "ارفع نمطًا ليتكرّر عبر الشريط",
+  "Tiles horizontally; the bar's height crops it vertically. Animated GIFs up to 2 MB play.":
+    "يتكرّر أفقيًا؛ ويقصّه ارتفاع الشريط عموديًا. تعمل صور GIF المتحرّكة حتى 2 ميجابايت.",
+  "Seek dot shape": "شكل نقطة التقديم",
+  Circle: "دائرة",
+  "The default round dot.": "النقطة المستديرة الافتراضية.",
+  Square: "مربّع",
+  "Rounded square in the same color.": "مربّع مدوّر باللون نفسه.",
+  "Custom image": "صورة مخصّصة",
+  "PNG, GIF, WebP, or SVG. Animated GIFs play.":
+    "PNG أو GIF أو WebP أو SVG. تعمل صور GIF المتحرّكة.",
+  "No dot, just the bar.": "بلا نقطة، فقط الشريط.",
+  "Image size": "حجم الصورة",
+  "Dot size": "حجم النقطة",
+  "Dot image": "صورة النقطة",
+  "Upload nyan cat, a sticker, anything": "ارفع قطة نيان أو ملصقًا أو أي شيء",
+  "PNG, JPEG, WebP, or SVG (auto-shrunk if huge). Animated GIFs up to 2 MB play live.":
+    "PNG أو JPEG أو WebP أو SVG (يُصغّر تلقائيًا إن كان ضخمًا). تعمل صور GIF المتحرّكة حتى 2 ميجابايت مباشرةً.",
+
+  "Desktop only": "سطح المكتب فقط",
+  "Local engine": "المحرك المحلي",
+  "Built-in peer-to-peer streaming, served from your own machine.":
+    "بثّ مدمج من النظير إلى النظير، يُقدَّم من جهازك الخاص.",
+  Running: "قيد التشغيل",
+  Stopped: "متوقّف",
+  Error: "خطأ",
+  Port: "المنفذ",
+  "Active torrents": "التورنتات النشطة",
+  "Run self-test": "تشغيل الاختبار الذاتي",
+  "Running self-test": "جارٍ الاختبار الذاتي",
+  "Restart engine": "إعادة تشغيل المحرك",
+  Restarting: "جارٍ إعادة التشغيل",
+  "Self-test is disabled while strict remote streaming is on. It downloads a test torrent over peer-to-peer on this machine.":
+    "الاختبار الذاتي معطّل أثناء تفعيل البثّ البعيد الصارم. فهو ينزّل تورنت اختبار عبر النظير إلى النظير على هذا الجهاز.",
+  "Self-test": "اختبار ذاتي",
+  Pass: "نجاح",
+  Fail: "فشل",
+
+  "Remote streaming server": "خادم بثّ بعيد",
+  "Point Harbor at a streaming server on another machine, like the Stremio service on a home server. Torrents download and stream from that machine instead of this one.":
+    "وجّه Harbor إلى خادم بثّ على جهاز آخر، مثل خدمة Stremio على خادم منزلي. تُنزّل التورنتات وتُبثّ من ذلك الجهاز بدلًا من هذا.",
+  Checking: "جارٍ التحقّق",
+  Unreachable: "غير قابل للوصول",
+  Forget: "نسيان",
+  "Use exclusively (never fall back to local)": "الاستخدام حصريًا (عدم الرجوع إلى المحلي أبدًا)",
+  "If the server is unreachable, playback fails instead of streaming locally. Use this when your VPN runs on the server machine and torrent traffic must never leave this one.":
+    "إن كان الخادم غير قابل للوصول، يفشل التشغيل بدلًا من البثّ محليًا. استخدم هذا عندما تعمل VPN على جهاز الخادم ويجب ألّا تغادر حركة التورنت هذا الجهاز أبدًا.",
+  "Probes the server's settings endpoint from this device.":
+    "يفحص نقطة إعدادات الخادم من هذا الجهاز.",
+  Testing: "جارٍ الاختبار",
+  "Run test": "تشغيل الاختبار",
+  "Server reachable": "الخادم قابل للوصول",
+  "Test failed": "فشل الاختبار",
+  "The server answered with status {status}. Is that a streaming server?":
+    "أجاب الخادم بالحالة {status}. هل هذا خادم بثّ؟",
+  "Server reachable in {ms}ms. Harbor will use it for torrent streaming.":
+    "الخادم قابل للوصول خلال {ms} مللي ثانية. سيستخدمه Harbor لبثّ التورنت.",
+  "Could not reach the server within 1.5 seconds. Check the address and that the server machine is online.":
+    "تعذّر الوصول إلى الخادم خلال 1.5 ثانية. تحقّق من العنوان ومن أن جهاز الخادم متصل.",
+
+  "No limit": "بلا حدّ",
+  "Internet speed": "سرعة الإنترنت",
+  "Pick the cap your link can sustain. Run a real speed test if you need a number.":
+    "اختر الحدّ الذي يتحمّله اتصالك. أجرِ اختبار سرعة حقيقيًا إن احتجت رقمًا.",
+  "No filter. All bitrates considered equally.":
+    "بلا تصفية. تُعامَل كل معدّلات البتّ بالتساوي.",
+  "Streams over {cap} Mbps will rank lower, even when cached.":
+    "تأتي البثوث التي تتجاوز {cap} ميجابت/ثانية في ترتيب أدنى، حتى عند تخزينها.",
+
+  "Home layout": "تخطيط الرئيسية",
+  "How the Home page assembles its rails.": "كيف تجمّع الصفحة الرئيسية صفوفها.",
+  "Harbor curated": "تنسيق Harbor",
+  "Hero carousel, Top 10, Trending, In Theaters, per-service rails. Addon catalogs append underneath, deduped.":
+    "عرض رئيسي دوّار، وأفضل 10، والرائج، وفي دور العرض، وصفوف لكل خدمة. تُضاف كتالوجات الإضافات أسفلها، بلا تكرار.",
+  "Classic Stremio": "Stremio الكلاسيكي",
+  "Continue Watching, then your installed addons. Every catalog renders as its own row, install order, no dedup, no hero.":
+    "متابعة المشاهدة، ثم إضافاتك المثبّتة. يُعرض كل كتالوج كصفّ خاص به، بترتيب التثبيت، بلا إزالة تكرار، بلا عرض رئيسي.",
+  "Show every addon row": "إظهار كل صفّ إضافة",
+  "Watchlist shows only saved titles": "تعرض قائمة المشاهدة العناوين المحفوظة فقط",
+  "Advance Continue Watching to the next episode": "تقديم متابعة المشاهدة إلى الحلقة التالية",
+  "Keep frames for": "الاحتفاظ بالإطارات لمدة",
+  None: "بلا",
+  "1 week": "أسبوع واحد",
+  "30 days": "30 يومًا",
+  "3 months": "3 أشهر",
+  "6 months": "6 أشهر",
+  "1 year": "سنة واحدة",
+  "Clear all saved frames": "مسح كل الإطارات المحفوظة",
+  "{n} frame stored. Wiping rebuilds them next time you watch.":
+    "{n} إطار مخزّن. يعيد المسح بناءها في المرة القادمة التي تشاهد فيها.",
+  "{n} frames stored. Wiping rebuilds them next time you watch.":
+    "{n} إطار مخزّن. يعيد المسح بناءها في المرة القادمة التي تشاهد فيها.",
+  "No frames stored yet. They'll appear here as you watch things.":
+    "لا إطارات مخزّنة بعد. ستظهر هنا أثناء مشاهدتك للأشياء.",
+  "Confirm clear": "تأكيد المسح",
+  "Clear all": "مسح الكل",
+  "How to get this": "كيفية الحصول على هذا",
+  "Card overlays": "تراكبات البطاقة",
+  "Fresh tomato for 60%+, splat for under.":
+    "طماطم طازجة لـ 60% فأكثر، ورشّة لما دون ذلك.",
+  "RPDB key above, https://btttr.cc, or a {imdbId} template":
+    "مفتاح RPDB أعلاه، أو https://btttr.cc، أو قالب {imdbId}",
+  "Hide titles under posters": "إخفاء العناوين أسفل الملصقات",
+  "Cleaner grid when your poster service already prints the title on the artwork.":
+    "شبكة أنظف عندما تطبع خدمة الملصقات لديك العنوان على العمل الفنّي بالفعل.",
+  "Add a TMDB key above to unlock this.": "أضف مفتاح TMDB أعلاه لفتح هذا.",
+  "Add an OMDb key above to unlock this.": "أضف مفتاح OMDb أعلاه لفتح هذا.",
+  "Hover preview": "معاينة بالتمرير",
+  "Rest the cursor on a poster to peek at the rating, runtime, and story without opening it.":
+    "أبقِ المؤشّر على ملصق لإلقاء نظرة على التقييم والمدة والقصة دون فتحه.",
+  Top: "الأعلى",
+  "Floats over the artwork": "يطفو فوق العمل الفنّي",
+  Bottom: "الأسفل",
+  "Sits above the title strip": "يقع فوق شريط العنوان",
+
+  "Title text": "نص العنوان",
+  "Resize the row titles on Home and the title shown in the player, without scaling the rest of the interface. You can also lead the player title with the series name instead of the episode.":
+    "غيّر حجم عناوين الصفوف في الرئيسية والعنوان المعروض في المشغّل، دون تغيير حجم بقية الواجهة. ويمكنك أيضًا بدء عنوان المشغّل باسم المسلسل بدلًا من الحلقة.",
+  "Row titles": "عناوين الصفوف",
+  "Player title": "عنوان المشغّل",
+  "Show series name first in the player": "إظهار اسم المسلسل أولًا في المشغّل",
+  "Lead with the show name instead of the episode title at the top of the player.":
+    "ابدأ باسم العمل بدلًا من عنوان الحلقة في أعلى المشغّل.",
+
+  "Block ads & trackers": "حظر الإعلانات والمتعقّبات",
+  "{n} tracker request blocked this session. Harbor itself sends zero telemetry.":
+    "حُظر {n} طلب تعقّب في هذه الجلسة. ولا يرسل Harbor نفسه أي قياسات.",
+  "{n} tracker requests blocked this session. Harbor itself sends zero telemetry.":
+    "حُظر {n} طلب تعقّب في هذه الجلسة. ولا يرسل Harbor نفسه أي قياسات.",
+  "Watching for ad, analytics, and tracking requests. Harbor itself sends zero telemetry.":
+    "يراقب طلبات الإعلانات والتحليلات والتعقّب. ولا يرسل Harbor نفسه أي قياسات.",
+  "Ad, analytics, and tracking requests pass through untouched.":
+    "تمرّ طلبات الإعلانات والتحليلات والتعقّب دون تغيير.",
+
+  "Close to the system tray": "الإغلاق إلى علبة النظام",
+  "Closing the window tucks Harbor into the tray instead of quitting, so it reopens instantly. Right-click the tray icon for quick controls, or pick Quit to exit fully.":
+    "يدسّ إغلاق النافذة Harbor في العلبة بدلًا من الإنهاء، ليُعاد فتحه فورًا. انقر بزرّ الفأرة الأيمن على أيقونة العلبة للتحكّم السريع، أو اختر إنهاء للخروج كليًا.",
+  "Always on top": "دائمًا في المقدّمة",
+  "Keep the Harbor window above other windows.": "أبقِ نافذة Harbor فوق النوافذ الأخرى.",
+  "Pause when minimized": "الإيقاف المؤقّت عند التصغير",
+  "Stop playback when you minimize Harbor or send it to the tray.":
+    "أوقف التشغيل عند تصغيرك Harbor أو إرساله إلى العلبة.",
+  "Pause when unfocused": "الإيقاف المؤقّت عند فقد التركيز",
+  "Stop playback whenever another window takes focus.":
+    "أوقف التشغيل كلّما أخذت نافذة أخرى التركيز.",
+
+  "Export everything": "تصدير كل شيء",
+  "Saves your whole Harbor setup to one file: theme, home layout, settings, addons, profiles, watchlist, player layouts, watch progress, and more. Your Stremio sign-in is left out on purpose.":
+    "يحفظ إعداد Harbor بالكامل في ملف واحد: السمة وتخطيط الرئيسية والإعدادات والإضافات والملفات الشخصية وقائمة المشاهدة وتخطيطات المشغّل وتقدّم المشاهدة والمزيد. يُترك تسجيل دخولك إلى Stremio خارجًا عمدًا.",
+  Export: "تصدير",
+  "Restore from a backup": "الاستعادة من نسخة احتياطية",
+  "Loads a backup file and replaces your current setup with it. Perfect for a new computer. Your Stremio sign-in on this device stays as is.":
+    "يحمّل ملف نسخة احتياطية ويستبدل إعدادك الحالي به. مثالي لحاسوب جديد. يبقى تسجيل دخولك إلى Stremio على هذا الجهاز كما هو.",
+  Restore: "استعادة",
+  "Could not build the backup file.": "تعذّر بناء ملف النسخة الاحتياطية.",
+  "Could not read that file.": "تعذّرت قراءة ذلك الملف.",
+  "an unknown date": "تاريخ غير معروف",
+  "Restore this backup?": "استعادة هذه النسخة الاحتياطية؟",
+  "This replaces your current Harbor setup (theme, home layout, settings, addons, profiles, and more) with the {n} saved entries in this file. Your Stremio sign-in stays as is. Harbor reloads when it finishes.":
+    "يستبدل هذا إعداد Harbor الحالي (السمة وتخطيط الرئيسية والإعدادات والإضافات والملفات الشخصية والمزيد) بالمدخلات المحفوظة البالغة {n} في هذا الملف. يبقى تسجيل دخولك إلى Stremio كما هو. يُعيد Harbor التحميل عند الانتهاء.",
+  "Saved {when} from Harbor {app}.": "حُفظ في {when} من Harbor {app}.",
+  "Restoring...": "جارٍ الاستعادة...",
+  "Restore and reload": "الاستعادة وإعادة التحميل",
+
+  "Get beta updates": "الحصول على التحديثات التجريبية",
+  "Receive early builds with the newest fixes before they reach the stable release. Betas can be rough around the edges; switch this off to return to stable at the next update.":
+    "تلقَّ إصدارات مبكّرة بأحدث الإصلاحات قبل وصولها إلى الإصدار المستقرّ. قد تكون النسخ التجريبية غير مصقولة؛ عطّل هذا للعودة إلى المستقرّ في التحديث القادم.",
+  "Catch stremio:// install links inside Harbor": "التقاط روابط التثبيت ‎stremio://‎ داخل Harbor",
+  "Harbor's in-app installer animates the manifest install and keeps you in context. Anything Harbor installs is also synced to your Stremio account, so the official app stays the canonical library. Turn this off and Stremio becomes the only handler for stremio:// links; Harbor still installs anything you trigger from inside the app (Configure & install, paste, drag-and-drop).":
+    "يحرّك مُثبّت Harbor داخل التطبيق تثبيت البيان ويبقيك في السياق. يتزامن أي شيء يثبّته Harbor أيضًا مع حساب Stremio الخاص بك، ليبقى التطبيق الرسمي المكتبة المعتمدة. عطّل هذا فيصبح Stremio المعالج الوحيد لروابط ‎stremio://‎؛ ويظل Harbor يثبّت أي شيء تطلقه من داخل التطبيق (الإعداد والتثبيت، اللصق، السحب والإفلات).",
+  "Heads up: if Stremio is also installed, Windows may ask which app to use the first time a stremio:// link fires. Pick Harbor to make it stick.":
+    "تنبيه: إن كان Stremio مثبّتًا أيضًا، فقد يسأل Windows عن أي تطبيق تستخدمه في أول مرة يُطلق فيها رابط ‎stremio://‎. اختر Harbor ليثبت ذلك.",
+  "stremio:// links now open in the Stremio app. Harbor will only install when you trigger it from inside Harbor.":
+    "تُفتح روابط ‎stremio://‎ الآن في تطبيق Stremio. ولن يثبّت Harbor إلا عندما تطلقه من داخل Harbor.",
+  "Checking harbor.site for a newer build.": "يتحقّق من harbor.site بحثًا عن إصدار أحدث.",
+  "Downloading {pct}%": "جارٍ التنزيل {pct}%",
+  "Downloaded. Ready to install and restart.": "تم التنزيل. جاهز للتثبيت وإعادة التشغيل.",
+  "Installing. Harbor will restart.": "جارٍ التثبيت. سيُعاد تشغيل Harbor.",
+  "A new version is ready to download.": "إصدار جديد جاهز للتنزيل.",
+  "You're on the latest version.": "أنت على أحدث إصدار.",
+  "Couldn't reach the update server. Try again in a moment.":
+    "تعذّر الوصول إلى خادم التحديث. حاول مجددًا بعد لحظة.",
+  "Harbor checks automatically every few hours.": "يتحقّق Harbor تلقائيًا كل بضع ساعات.",
+  "Harbor {version} available": "Harbor {version} متاح",
+  "Update now": "التحديث الآن",
+  "Check for updates": "التحقّق من التحديثات",
+  "Show on Discord": "الإظهار على Discord",
+  "Display what you are watching on your Discord profile, with the show poster and a live progress bar. Requires the Discord desktop app to be running.":
+    "اعرض ما تشاهده في ملفّك الشخصي على Discord، مع ملصق العمل وشريط تقدّم مباشر. يتطلب تشغيل تطبيق Discord لسطح المكتب.",
+  "Hide the title": "إخفاء العنوان",
+  "Show 'Watching something' with no show name or poster.":
+    "اعرض «يشاهد شيئًا» بلا اسم عمل أو ملصق.",
+  "Show while paused": "الإظهار أثناء الإيقاف المؤقّت",
+  "Keep the presence visible when playback is paused.":
+    "أبقِ الحضور ظاهرًا عند إيقاف التشغيل مؤقّتًا.",
+  "Show while browsing": "الإظهار أثناء التصفّح",
+  "Display 'Browsing Harbor' when nothing is playing.":
+    "اعرض «يتصفّح Harbor» عندما لا يكون هناك تشغيل.",
+  "Show poster": "إظهار الملصق",
+  "Reveal the show or movie artwork. Off keeps the title but hides the poster.":
+    "أظهر العمل الفنّي للعمل أو الفيلم. يبقي الإيقاف العنوان لكنه يخفي الملصق.",
+  "Show elapsed time": "إظهار الوقت المنقضي",
+  "Display the live progress bar showing how far into the title you are.":
+    "اعرض شريط التقدّم المباشر الذي يبيّن مدى تقدّمك في العنوان.",
+  "Watch party join button": "زرّ الانضمام إلى حفلة المشاهدة",
+  "Add a Join button with your room link while you're in a watch party.":
+    "أضف زرّ انضمام مع رابط غرفتك أثناء وجودك في حفلة مشاهدة.",
+  "And for the naughty ones: browsing or rating an adult addon never shows on Discord.":
+    "وللأشقياء: لا يظهر تصفّح أو تقييم إضافة للبالغين على Discord أبدًا.",
+  "OMDB daily budget": "ميزانية OMDB اليومية",
+  "Save an OMDB key in Library & metadata to enable rating fetches.":
+    "احفظ مفتاح OMDB في المكتبة والبيانات الوصفية لتمكين جلب التقييمات.",
+  "Key rejected. Check it on Library & metadata.":
+    "رُفض المفتاح. تحقّق منه في المكتبة والبيانات الوصفية.",
+  "{used} / {limit} requests today.": "{used} / {limit} طلب اليوم.",
+  "Budget exhausted, resets at midnight UTC.":
+    "نفدت الميزانية، تُعاد عند منتصف الليل بتوقيت UTC.",
+  "Reset counter": "إعادة تعيين العدّاد",
+  "Replay walkthrough": "إعادة تشغيل الجولة التعريفية",
+  "Re-runs the welcome flow and clears every dismissed tip.":
+    "يعيد تشغيل تدفّق الترحيب ويمسح كل تلميح مرفوض.",
+  Done: "تم",
+  Replay: "إعادة التشغيل",
+  "Restore dismissed hints": "استعادة التلميحات المرفوضة",
+  "Brings back the small in-app tips you've dismissed without redoing the welcome flow.":
+    "يعيد التلميحات الصغيرة داخل التطبيق التي رفضتها دون إعادة تدفّق الترحيب.",
+  Restored: "تمت الاستعادة",
+  Version: "الإصدار",
+  Build: "الإصدار البنائي",
+  "Desktop (Tauri 2 / WebView2)": "سطح المكتب (Tauri 2 / WebView2)",
+  Web: "الويب",
+  "Bug reports": "بلاغات الأخطاء",
+  "Repair library": "إصلاح المكتبة",
+  "Sign in to Stremio first. The repair scans only the active profile's library.":
+    "سجّل الدخول إلى Stremio أولًا. يفحص الإصلاح مكتبة الملف الشخصي النشط فقط.",
+  "Failed: {error}": "فشل: {error}",
+  "Library is empty. Nothing to repair.": "المكتبة فارغة. لا شيء لإصلاحه.",
+  "{repaired} fixed, {clean} already clean": "أُصلح {repaired}، {clean} نظيف بالفعل",
+  ", {n} unrepairable": "، {n} غير قابل للإصلاح",
+  "Rewrites every library item to match Stremio's exact schema. Run once if your Stremio app started crashing after Harbor synced playback.":
+    "يعيد كتابة كل عنصر مكتبة ليطابق مخطط Stremio الدقيق. شغّله مرة إن بدأ تطبيق Stremio بالتعطّل بعد مزامنة Harbor للتشغيل.",
+  "Fetching {n} items…": "جارٍ جلب {n} عنصر…",
+  "Fetching library index…": "جارٍ جلب فهرس المكتبة…",
+  "{n} items need repair.": "{n} عنصر يحتاج إصلاحًا.",
+  "Checking {n} items…": "جارٍ فحص {n} عنصر…",
+  "Pushing {pushed} of {total}…": "جارٍ دفع {pushed} من {total}…",
+  "Done.": "تم.",
+  "Working…": "جارٍ العمل…",
+  "Run again": "تشغيل مجددًا",
+  "Repair now": "إصلاح الآن",
+  "Web build": "إصدار الويب",
+  "Where your data lives": "أين تقيم بياناتك",
+  "Everything you save here stays in this browser. Your Stremio login, API keys, watch progress, picker cache, dismissed tips. Harbor servers never see any of it. Clearing your browser data wipes it.":
+    "كل ما تحفظه هنا يبقى في هذا المتصفّح. تسجيل دخولك إلى Stremio ومفاتيح API وتقدّم المشاهدة وذاكرة الأداة المؤقّتة والتلميحات المرفوضة. لا ترى خوادم Harbor أيًا منها أبدًا. ومسح بيانات متصفّحك يمحوها.",
+  "The web build can't run mpv, the trickplay generator, the local bandwidth probe, or your own Cloudflare relay. If you want HDR passthrough, TrueHD or DTS-HD audio, and smoother seeking, grab the desktop app.":
+    "لا يستطيع إصدار الويب تشغيل mpv أو مولّد trickplay أو مسبار النطاق الترددي المحلي أو مُرحّل Cloudflare الخاص بك. إن أردت تمرير HDR وصوت TrueHD أو DTS-HD وتقديمًا أنعم، فاحصل على تطبيق سطح المكتب.",
+  "Get Harbor for desktop": "احصل على Harbor لسطح المكتب",
+  "Source code": "الشِفرة المصدرية",
+
+  "Your relay is live": "مُرحّلك مباشر",
+  "Connected to relay": "متصل بالمُرحّل",
+  "Watch Together": "المشاهدة الجماعية",
+  "Synchronizes playback state between participants in the same room.":
+    "يزامن حالة التشغيل بين المشاركين في الغرفة نفسها.",
+  "Test connection": "اختبار الاتصال",
+  "Pings your Worker at /health to confirm it's reachable from this device.":
+    "يرسل اختبارًا إلى عاملك على /health للتأكّد من إمكانية الوصول إليه من هذا الجهاز.",
+  "Testing…": "جارٍ الاختبار…",
+  "Relay version {version}. Update available.": "إصدار المُرحّل {version}. يتوفّر تحديث.",
+  unknown: "غير معروف",
+  "Relay is current (v{version}).": "المُرحّل محدّث (الإصدار {version}).",
+  "Harbor's public relay updates automatically; nothing to do.":
+    "يتحدّث مُرحّل Harbor العام تلقائيًا؛ لا شيء عليك فعله.",
+  "Redeploy to pick up the latest Watch Together fixes. The in-app banner clears once the new version is live.":
+    "أعد النشر لالتقاط أحدث إصلاحات المشاهدة الجماعية. تختفي اللافتة داخل التطبيق بمجرّد أن يصبح الإصدار الجديد مباشرًا.",
+  "Running the latest Watch Together protocol.": "يشغّل أحدث بروتوكول للمشاهدة الجماعية.",
+  Redeploy: "إعادة النشر",
+  "Redeploy instructions": "تعليمات إعادة النشر",
+  "Backup credentials": "نسخ بيانات الاعتماد احتياطيًا",
+  "Cloudflare shows API tokens only once. Save a copy now or you'll lose the ability to stop or redeploy this relay from Harbor.":
+    "تعرض Cloudflare رموز API مرة واحدة فقط. احفظ نسخة الآن وإلا فقدت القدرة على إيقاف هذا المُرحّل أو إعادة نشره من Harbor.",
+  "Relay verified end-to-end": "تم التحقّق من المُرحّل من طرف إلى طرف",
+  "Relay test failed": "فشل اختبار المُرحّل",
+  "Redeploy relay": "إعادة نشر المُرحّل",
+  "Stopping…": "جارٍ الإيقاف…",
+  "Stop relay": "إيقاف المُرحّل",
+  "Forget URL": "نسيان الرابط",
+  "Use a different URL": "استخدام رابط مختلف",
+  "Deploy mine instead": "نشر مُرحّلي بدلًا من ذلك",
+  "Deploy a relay": "نشر مُرحّل",
+  "Deploy a relay (desktop only)": "نشر مُرحّل (سطح المكتب فقط)",
+  "Relay deployment requires the Cloudflare API, which is unavailable to browser clients. Use the desktop build to deploy a Worker, then enter the resulting URL below.":
+    "يتطلب نشر المُرحّل واجهة Cloudflare API، وهي غير متاحة لعملاء المتصفّح. استخدم إصدار سطح المكتب لنشر عامل، ثم أدخل الرابط الناتج أدناه.",
+  "Enter an existing relay URL:": "أدخل رابط مُرحّل موجود:",
+  "Only enter URLs for relays you operate or trust. A relay only carries Watch Together sync messages (play, pause, seek). Nothing else passes through it.":
+    "أدخل فقط روابط المُرحّلات التي تشغّلها أو تثق بها. لا يحمل المُرحّل سوى رسائل مزامنة المشاهدة الجماعية (تشغيل، إيقاف مؤقّت، تقديم). ولا يمرّ عبره شيء آخر.",
+  "Hit your daily quota? Use Harbor's public relay, or host your own.":
+    "بلغت حصّتك اليومية؟ استخدم مُرحّل Harbor العام، أو استضِف مُرحّلك الخاص.",
+  "Use Harbor's public relay": "استخدام مُرحّل Harbor العام",
+  "Documentation: run your own relay": "الوثائق: شغّل مُرحّلك الخاص",
+
+  "Install failed": "فشل التثبيت",
+  debrid: "Debrid",
+  "Installed via {label}": "مُثبّت عبر {label}",
+  "Save a debrid key above (TorBox, Real-Debrid, AllDebrid, Premiumize, or Debrid-Link) to enable this.":
+    "احفظ مفتاح Debrid أعلاه (TorBox أو Real-Debrid أو AllDebrid أو Premiumize أو Debrid-Link) لتمكين هذا.",
+  Remove: "إزالة",
+  Install: "تثبيت",
+  Installed: "مُثبّت",
+  Configure: "إعداد",
+  "Couldn't install. Double-check the URL and try again.":
+    "تعذّر التثبيت. تحقّق من الرابط وحاول مجددًا.",
+  "Paste the manifest URL the configure page gave you":
+    "الصق رابط البيان الذي أعطته إياك صفحة الإعداد",
+
+  Usenet: "Usenet",
+  "View all": "عرض الكل",
 };
 
 export default settings;

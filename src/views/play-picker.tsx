@@ -52,12 +52,14 @@ export function PlayPicker({
   autoPlay,
   attempt,
   intent,
+  resume,
 }: {
   meta: Meta;
   episode?: PlayEpisode;
   autoPlay?: boolean;
   attempt?: number;
   intent?: "play" | "download";
+  resume?: boolean;
 }) {
   const isDownload = intent === "download";
   const { openPlayer, openSettings, exitPickerToDetail } = useView();
@@ -309,6 +311,7 @@ export function PlayPicker({
   const rememberedHandledFirst =
     !!previousMatch &&
     settings.rememberLastStream &&
+    !!resume &&
     !wasInvitedTo(inviteKey) &&
     !isDownload &&
     !roomGuestPick &&
@@ -427,7 +430,6 @@ export function PlayPicker({
           abortResolve();
           setResolving(null);
           setAutoCancelled(true);
-          backToDetail();
         }}
       />
     );

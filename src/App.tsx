@@ -80,6 +80,7 @@ const importFilter = () => import("@/views/filter");
 const importGrid = () => import("@/views/grid");
 const importPerson = () => import("@/views/person");
 const importCollection = () => import("@/views/collection");
+const importEpisodeDetail = () => import("@/views/episode-detail");
 const importPlayPicker = () => import("@/views/play-picker");
 const importPlayer = () => import("@/views/player");
 const importMovies = () => import("@/views/movies");
@@ -104,6 +105,7 @@ const FilterView = lazy(() => importFilter().then((m) => ({ default: m.FilterVie
 const GridView = lazy(() => importGrid().then((m) => ({ default: m.GridView })));
 const PersonView = lazy(() => importPerson().then((m) => ({ default: m.PersonView })));
 const CollectionView = lazy(() => importCollection().then((m) => ({ default: m.CollectionView })));
+const EpisodeDetailView = lazy(() => importEpisodeDetail().then((m) => ({ default: m.EpisodeDetailView })));
 const CollectionsView = lazy(() => import("@/views/collections").then((m) => ({ default: m.CollectionsView })));
 const PlayPicker = lazy(() => importPlayPicker().then((m) => ({ default: m.PlayPicker })));
 const PlayerView = lazy(() => importPlayer().then((m) => ({ default: m.PlayerView })));
@@ -372,7 +374,7 @@ function parseDeepLinkEpisode(videoId?: string): { season: number; episode: numb
 }
 
 function Shell() {
-  const { topKind, service, meta, metaLiveContext, metaEpisodeHint, personId, collectionId, filter, grid, awardType, animeAwardSource, picker, player, setView, goBack, openMeta, stackKinds } = useView();
+  const { topKind, service, meta, metaLiveContext, metaEpisodeHint, episodeDetail, personId, collectionId, filter, grid, awardType, animeAwardSource, picker, player, setView, goBack, openMeta, stackKinds } = useView();
   const { settings } = useSettings();
   const preview = useThemePreview();
   const layout = useMemo(
@@ -459,6 +461,7 @@ function Shell() {
   const pickerTop = topKind === "picker";
   const personTop = topKind === "person";
   const collectionTop = topKind === "collection";
+  const episodeDetailTop = topKind === "episode-detail";
   const collectionsIndexTop = topKind === "collections";
   const collectionsIndexAlive = useKeepAlive(
     collectionsIndexTop,
@@ -523,6 +526,11 @@ function Shell() {
     collectionTop,
     collectionId !== null,
     stackKinds.includes("collection"),
+  );
+  const episodeDetailAlive = useKeepAlive(
+    episodeDetailTop,
+    !!episodeDetail,
+    stackKinds.includes("episode-detail"),
   );
   const filterAlive = useKeepAlive(filterTop, !!filter);
   const gridAlive = useKeepAlive(gridTop, !!grid, stackKinds.includes("grid"));
@@ -667,6 +675,19 @@ function Shell() {
             </Suspense>
           </div>
         )}
+        {episodeDetailAlive && episodeDetail && (
+          <div className={layer(episodeDetailTop)}>
+            <Suspense fallback={null}>
+              <EpisodeDetailView
+                key={`episode-${episodeDetail.seriesId}-${episodeDetail.season}-${episodeDetail.episode}`}
+                seriesId={episodeDetail.seriesId}
+                season={episodeDetail.season}
+                episode={episodeDetail.episode}
+                seriesMeta={episodeDetail.seriesMeta}
+              />
+            </Suspense>
+          </div>
+        )}
         {filterAlive && filter && (
           <div className={layer(filterTop)}>
             <Suspense fallback={null}>
@@ -712,6 +733,7 @@ function Shell() {
                 autoPlay={picker.intent === "download" ? false : picker.autoPlay}
                 attempt={picker.attempt}
                 intent={picker.intent}
+                resume={picker.resume}
               />
             </Suspense>
           </div>

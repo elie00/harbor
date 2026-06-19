@@ -1,5 +1,6 @@
 import { Lock, Pencil } from "lucide-react";
 import { CatAvatar } from "@/components/icons/cat-avatar";
+import { useT } from "@/lib/i18n";
 import { type Profile } from "@/lib/profiles";
 
 export function ProfileTile({
@@ -13,6 +14,7 @@ export function ProfileTile({
   onEdit?: () => void;
   size?: "sm" | "md" | "lg";
 }) {
+  const t = useT();
   const dim = size === "lg" ? "h-24 w-24" : size === "md" ? "h-16 w-16" : "h-12 w-12";
   const ring = size === "lg" ? "ring-[3px]" : "ring-2";
   const fontName =
@@ -25,7 +27,7 @@ export function ProfileTile({
           type="button"
           onClick={onSelect}
           className="block cursor-pointer outline-none"
-          aria-label={`Switch to ${profile.name}`}
+          aria-label={t("Switch to {name}", { name: profile.name })}
         >
           <span
             className={`relative flex ${dim} items-center justify-center overflow-hidden rounded-full bg-elevated ${ring} transition-all duration-200 group-hover:scale-[1.04]`}
@@ -45,7 +47,7 @@ export function ProfileTile({
         </button>
         {profile.passwordHash && (
           <span
-            aria-label="Locked"
+            aria-label={t("chrome.locked")}
             className="pointer-events-none absolute -bottom-1 -end-1 flex h-7 w-7 items-center justify-center rounded-full bg-canvas text-ink shadow-md ring-1 ring-edge"
           >
             <Lock size={12} strokeWidth={2.4} />
@@ -55,7 +57,7 @@ export function ProfileTile({
           <button
             type="button"
             onClick={onEdit}
-            aria-label={`Edit ${profile.name}`}
+            aria-label={t("Edit {name}", { name: profile.name })}
             className="absolute -end-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-canvas/95 text-ink opacity-0 ring-1 ring-edge transition-opacity duration-150 group-hover:opacity-100 hover:bg-elevated"
           >
             <Pencil size={12} strokeWidth={2.4} />
@@ -69,7 +71,7 @@ export function ProfileTile({
             className="text-[9.5px] font-bold uppercase tracking-[0.18em]"
             style={{ color: profile.color }}
           >
-            Primary
+            {t("profile.primary")}
           </span>
         )}
       </div>

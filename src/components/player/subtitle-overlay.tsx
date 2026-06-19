@@ -23,7 +23,7 @@ export function SubtitleOverlay({ text, startSec, scale = 1 }: Props) {
   const baseTextStyle: React.CSSProperties = {
     color: fontColor,
     fontFamily: family,
-    fontWeight: 600,
+    fontWeight: settings.subBold ? 700 : 400,
     fontSize: `${fontSize}px`,
     lineHeight: 1.2,
     letterSpacing: `${(-0.005 + (settings.subLineSpacing ?? 0) * 0.06).toFixed(3)}em`,

@@ -46,11 +46,14 @@ export type Settings = {
   showMalBadge: boolean;
   showQualityBadge: boolean;
   posterScale: number;
+  rowTitleScale: number;
+  playerTitleScale: number;
+  playerTitleSeriesFirst: boolean;
   uiScale: number;
   serveWebUi: boolean;
   trailerQuality: "auto" | "360p" | "720p" | "1080p" | "best";
   badgePlacement: "top" | "bottom";
-  episodeLayout: "list" | "strip";
+  episodeLayout: "list" | "strip" | "grid";
   harborAvatar: string | null;
   harborColor: string;
   anilistAutoSync: boolean;
@@ -86,6 +89,8 @@ export type Settings = {
   playerHdrToSdr: boolean;
   playerMotionInterp: boolean;
   playerAnime4k: boolean;
+  playerAnime4kAnimeOnly: boolean;
+  playerAnime4kIndicator: boolean;
   playerMpvEmbed: boolean;
   stremioServerTranscode: boolean;
   directTorrentStream: boolean;
@@ -109,6 +114,7 @@ export type Settings = {
   subAssOverride: "no" | "yes" | "force" | "scale" | "strip";
   subStyle: "shadow" | "outline" | "box";
   subFontFamily: string;
+  subBold: boolean;
   customFonts: Array<{ id: string; name: string; dataUrl: string; format: string }>;
   subBoxOpacity: number;
   subBoxColor: string;

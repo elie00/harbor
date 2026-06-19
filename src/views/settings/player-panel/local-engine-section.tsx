@@ -1,6 +1,7 @@
 import { Check, Loader2, Play, RotateCw, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSettings } from "@/lib/settings";
+import { useT } from "@/lib/i18n";
 import {
   torrentEngineRestart,
   torrentEngineSelfTest as engineSelfTest,
@@ -27,6 +28,7 @@ function engineState(status: EngineStatus | null): EngineState {
 
 export function LocalEngineSection() {
   const { settings } = useSettings();
+  const t = useT();
   const strictRemote = !!settings.remoteStreamServerUrl && settings.remoteStreamServerStrict;
   const [status, setStatus] = useState<EngineStatus | null>(null);
   const [running, setRunning] = useState(false);
@@ -83,25 +85,25 @@ export function LocalEngineSection() {
     <div id={settingsAnchor("Local engine")} className="scroll-mt-28 flex flex-col gap-4 rounded-2xl border border-edge-soft bg-canvas/40 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-0.5">
-          <span className="text-[14px] font-medium text-ink">Local engine</span>
+          <span className="text-[14px] font-medium text-ink">{t("Local engine")}</span>
           <span className="text-[12.5px] text-ink-subtle">
-            Built-in peer-to-peer streaming, served from your own machine.
+            {t("Built-in peer-to-peer streaming, served from your own machine.")}
           </span>
         </div>
         <span
           className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${pill.chip}`}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${pill.dot}`} />
-          {pill.label}
+          {t(pill.label)}
         </span>
       </div>
 
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[12.5px] text-ink-subtle">
         <span>
-          Port <span className="font-mono text-accent">{status?.port ?? "n/a"}</span>
+          {t("Port")} <span className="font-mono text-accent">{status?.port ?? "n/a"}</span>
         </span>
         <span>
-          Active torrents <span className="font-mono text-accent">{status?.active_torrents ?? 0}</span>
+          {t("Active torrents")} <span className="font-mono text-accent">{status?.active_torrents ?? 0}</span>
         </span>
       </div>
 
@@ -121,7 +123,7 @@ export function LocalEngineSection() {
           ) : (
             <Play size={14} strokeWidth={2.4} />
           )}
-          {running ? "Running self-test" : "Run self-test"}
+          {running ? t("Running self-test") : t("Run self-test")}
         </button>
         <button
           type="button"
@@ -134,13 +136,13 @@ export function LocalEngineSection() {
           ) : (
             <RotateCw size={14} strokeWidth={2.4} />
           )}
-          {restarting ? "Restarting" : "Restart engine"}
+          {restarting ? t("Restarting") : t("Restart engine")}
         </button>
       </div>
 
       {strictRemote && (
         <p className="text-[12px] leading-relaxed text-accent/85">
-          Self-test is disabled while strict remote streaming is on. It downloads a test torrent over peer-to-peer on this machine.
+          {t("Self-test is disabled while strict remote streaming is on. It downloads a test torrent over peer-to-peer on this machine.")}
         </p>
       )}
 
@@ -148,7 +150,7 @@ export function LocalEngineSection() {
         <div className="flex flex-col gap-2.5 rounded-xl border border-edge-soft bg-canvas/40 p-3.5">
           <div className="flex items-center gap-2">
             <span className="text-[11.5px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
-              Self-test
+              {t("Self-test")}
             </span>
             <span
               className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${
@@ -160,7 +162,7 @@ export function LocalEngineSection() {
               ) : (
                 <X size={12} strokeWidth={2.8} />
               )}
-              {result.pass ? "Pass" : "Fail"}
+              {result.pass ? t("Pass") : t("Fail")}
             </span>
           </div>
           <ul className="flex flex-col gap-1.5">
